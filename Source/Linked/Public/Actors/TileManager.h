@@ -43,4 +43,13 @@ private:
 
 	UFUNCTION(CallInEditor)
 	void GenerateTileSet();
+	void ResetTiles();
+	void SpawnTiles();
+
+	//Find each tiles neighbours
+	void DetermineTileNeighbours();
+	void GetUpNeighbour(ATile* CurrentTile, uint32& YCoord, int32 ArrayIndex);
+	void GetDownNeighbour(ATile* CurrentTile, uint32& YCoord, int32 ArrayIndex);
+	void GetLeftNeighbour(ATile* CurrentTile, uint32& XCoord, int32 ArrayIndex);
+	void GetRightNeighbour(ATile* CurrentTile, uint32& XCoord, int32 ArrayIndex);
 };

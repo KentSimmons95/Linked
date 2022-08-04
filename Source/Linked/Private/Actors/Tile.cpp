@@ -10,6 +10,9 @@ ATile::ATile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComp"));
+	RootComponent = StaticMeshComp;
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -25,4 +28,44 @@ void ATile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
+
+void ATile::SetTileCoords(uint32 XValue, int32 YValue)
+{
+	TileCoord.X = XValue;
+	TileCoord.Y = YValue;
+}
+
+void ATile::AddUpNeighbour(ATile* UpNeighbour)
+{
+	TileNeighbours.UpNeighbour = UpNeighbour;
+}
+
+void ATile::AddDownNeighbour(ATile* DownNeighbour)
+{
+	TileNeighbours.DownNeighbour = DownNeighbour;
+}
+
+void ATile::AddLeftNeighbour(ATile* LeftNeighbour)
+{
+	TileNeighbours.LeftNeighbour = LeftNeighbour;
+
+}
+
+void ATile::AddRightNeighbour(ATile* RightNeighbour)
+{
+	TileNeighbours.RightNeighbour = RightNeighbour;
+
+}
+
+uint32 ATile::GetXCoord()
+{
+	return TileCoord.X;
+}
+
+uint32 ATile::GetYCoord()
+{
+	return TileCoord.Y;
+}
+
+
 
