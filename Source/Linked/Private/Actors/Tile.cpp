@@ -11,8 +11,6 @@ ATile::ATile()
 
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComp"));
 	RootComponent = StaticMeshComp;
-
-	
 }
 
 // Called when the game starts or when spawned
@@ -55,6 +53,11 @@ void ATile::AddRightNeighbour(ATile* RightNeighbour)
 {
 	TileNeighbours.RightNeighbour = RightNeighbour;
 
+}
+
+FTileNeighbours ATile::GetTileNeighbours() const
+{
+	return TileNeighbours;
 }
 
 uint32 ATile::GetXCoord()

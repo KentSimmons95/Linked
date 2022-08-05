@@ -22,7 +22,10 @@ ALinkedPlayerPawn::ALinkedPlayerPawn()
 void ALinkedPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	SetupStartingPosition();
+	GetPossibleMoves();
+
 	PlayerController = Cast<ALinkedPlayerController>(GameplayStatics->GetPlayerController(GetWorld(), 0));
 	if (PlayerController)
 	{
@@ -68,5 +71,91 @@ void ALinkedPlayerPawn::MoveUp(float AxisValue)
 void ALinkedPlayerPawn::MoveRight(float AxisValue)
 {
 	MovementDirection.Y = FMath::Clamp(AxisValue, -1.0f, 1.0f);
+}
+
+ATile* ALinkedPlayerPawn::GetCurrentTile() const
+{
+	return CurrentTile;
+}
+
+bool ALinkedPlayerPawn::CanMoveUp(FTileNeighbours& Neighbours)
+{
+	//Check up tile
+	if (Neighbours.UpNeighbour == nullptr)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool ALinkedPlayerPawn::CanMoveDown(FTileNeighbours& Neighbours)
+{
+	//Check down tile
+	if (Neighbours.DownNeighbour == nullptr)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool ALinkedPlayerPawn::CanMoveLeft(FTileNeighbours& Neighbours)
+{
+	//Check left tile
+	if (Neighbours.LeftNeighbour == nullptr)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+bool ALinkedPlayerPawn::CanMoveRight(FTileNeighbours& Neighbours)
+{
+	//Check right tile
+	if (Neighbours.RightNeighbour == nullptr)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+void ALinkedPlayerPawn::SetupStartingPosition()
+{
+	//Check to see if the pawn has a starting tile
+	if (!PawnStartTile)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No start tile selected for Pawn - %s"), *this->GetActorNameOrLabel());
+		return;
+	}
+
+	CurrentTile = PawnStartTile;
+	
+	//Move the Pawn to its starting Tile
+	this->SetActorLocation(PawnStartTile->GetActorLocation());
+}
+
+void ALinkedPlayerPawn::GetPossibleMoves()
+{
+	FTileNeighbours Neighbours = CurrentTile->GetTileNeighbours();
+
+	// Check whether or not there is a neighour in each of the 4 possible directions 
+	// If there is a tile - set flag to true or reset back to false if there isn't a tile
+	
+	PossibleMoves.bCanMoveUp = CanMoveUp(Neighbours);
+	PossibleMoves.bCanMoveDown = CanMoveDown(Neighbours);
+	PossibleMoves.bCanMoveLeft = CanMoveLeft(Neighbours);
+	PossibleMoves.bCanMoveRight = CanMoveRight(Neighbours);
+	
 }
 

@@ -40,6 +40,9 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 
+	//TileManager is a friend to Tile
+	friend class ATileManager;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -52,12 +55,8 @@ public:
 	//YValue translates to the Height position in the tileset
 	void SetTileCoords(uint32 XValue, int32 YValue);
 
-	void AddUpNeighbour(ATile* UpNeighbour);
-	void AddDownNeighbour(ATile* DownNeighbour);
-	void AddLeftNeighbour(ATile* LeftNeighbour);
-	void AddRightNeighbour(ATile* RightNeighbour);
-
-
+	FTileNeighbours GetTileNeighbours() const;
+		 
 	uint32 GetXCoord();
 	uint32 GetYCoord();
 
@@ -69,6 +68,11 @@ private:
 	FTileCoordinate TileCoord;
 	UPROPERTY(VisibleAnywhere, Category = "Neighbours")
 	FTileNeighbours TileNeighbours;
+
+	void AddUpNeighbour(ATile* UpNeighbour);
+	void AddDownNeighbour(ATile* DownNeighbour);
+	void AddLeftNeighbour(ATile* LeftNeighbour);
+	void AddRightNeighbour(ATile* RightNeighbour);
 };
 
 
