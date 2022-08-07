@@ -46,7 +46,7 @@ void ALinkedPlayerController::MoveUp(float AxisValue)
 {
 	for (int i = 0; i < NumPawns; i++)
 	{
-		Pawns[i]->MoveUp(AxisValue);
+		//Pawns[i]->MoveUp(AxisValue);
 	}
 }
 
@@ -58,12 +58,12 @@ void ALinkedPlayerController::MoveWatsonRight(float AxisValue)
 		UE_LOG(LogTemp, Warning, TEXT("Watson"));
 		for (int i = 0; i < NumPawns; i++)
 		{
-			Pawns[i]->MoveRight(AxisValue);
+			//Pawns[i]->MoveRight(AxisValue);
 		}
 	}
 	else
 	{
-		Pawns[0]->MoveRight(AxisValue);
+		//Pawns[0]->MoveRight(AxisValue);
 	}
 }
 
@@ -74,12 +74,12 @@ void ALinkedPlayerController::MoveSherlockRight(float AxisValue)
 		UE_LOG(LogTemp, Warning, TEXT("Sherlock"));
 		for (int i = 0; i < NumPawns; i++)
 		{
-			Pawns[i]->MoveRight(AxisValue);
+			//Pawns[i]->MoveRight(AxisValue);
 		}
 	}
 	else
 	{
-		Pawns[1]->MoveRight(AxisValue);
+		//Pawns[1]->MoveRight(AxisValue);
 	}
 }
 
