@@ -30,12 +30,13 @@ private:
 
 	void SetupInput();
 
-	void MoveUp(float AxisValue);
-
-	void MoveWatsonRight(float AxisValue);
-	void MoveSherlockRight(float AxisValue);
 
 	//Trace a line of sight between the 2 Pawns to see if they are connected
 	//If the trace is blocked by an object then disable certain movement
 	bool HasLineOfSight();
+
+	void MoveUp();
+	void MoveDown();
+	void MoveLeft();
+	void MoveRight();
 };

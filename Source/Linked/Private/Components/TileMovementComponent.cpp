@@ -12,6 +12,13 @@ UTileMovementComponent::UTileMovementComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+
+}
+
+void UTileMovementComponent::TimelineProgress(float Value)
+{
+	FVector NewLocation = FMath::Lerp(StartLoc, EndLoc, Value);
+	PawnOwner->SetActorLocation(NewLocation);
 }
 
 
@@ -22,7 +29,12 @@ void UTileMovementComponent::BeginPlay()
 
 	//Get the pawn this component is attached to
 	PawnOwner = Cast<ALinkedPlayerPawn>(this->GetOwner());
+	CurrentTile = PawnOwner->GetCurrentTile();
 	GetPossibleMoves();
+
+	UE_LOG(LogTemp, Warning, TEXT("Hi!"));
+	//Timeline OnCompleteFunction
+	CurveTimeline.SetTimelineFinishedFunc(OnMoveCompleted());
 }
 
 
@@ -30,6 +42,8 @@ void UTileMovementComponent::BeginPlay()
 void UTileMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	CurveTimeline.TickTimeline(DeltaTime);
 }
 
 bool UTileMovementComponent::CanMoveUp() const
@@ -84,6 +98,24 @@ bool UTileMovementComponent::CanMoveRight() const
 	}
 }
 
+FOnTimelineEvent UTileMovementComponent::OnMoveCompleted()
+{
+	FOnTimelineEvent Event;
+	Event.BindUFunction(this, FName("UpdatePawnInformation"));
+	return Event;
+}
+
+void UTileMovementComponent::UpdatePawnInformation()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hi!"));
+
+	CurrentTile = TileMovedTo;
+	TileMovedTo = nullptr;
+	PawnOwner->SetCurrentTile(CurrentTile);
+	PawnOwner->UpdateTileNeighbours();
+	GetPossibleMoves();
+}
+
 void UTileMovementComponent::MoveToTile(float DeltaTime, ATile* Tile)
 {
 	PawnOwner->SetActorLocation(FMath::VInterpConstantTo(
@@ -93,11 +125,38 @@ void UTileMovementComponent::MoveToTile(float DeltaTime, ATile* Tile)
 		InterpSpeed));
 }
 
-void UTileMovementComponent::MoveUp(float DeltaTime)
+void UTileMovementComponent::MoveUp()
 {
+	//Check if the move is possible to make
+	GetPossibleMoves();
+
 	if (CanMoveUp())
 	{
-		MoveToTile(DeltaTime, PawnOwner->GetCurrentTileNeighbours().UpNeighbour);
+		if (CurveFloat)
+		{
+			FOnTimelineFloat TimelineProgress;
+			TimelineProgress.BindUFunction(this, FName("TimelineProgress"));
+			CurveTimeline.AddInterpFloat(CurveFloat, TimelineProgress);
+			CurveTimeline.SetLooping(false);
+
+			StartLoc = PawnOwner->GetCurrentTile()->GetActorLocation();
+			EndLoc = PawnOwner->GetNeighbouringTileUp()->GetActorLocation();
+			
+			CurveTimeline.PlayFromStart();
+
+			//Update the Tile we moved to - used to update the PlayerPawn's new Tile
+			TileMovedTo = PawnOwner->GetNeighbouringTileUp();
+			
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent!"));
+
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to MoveUp"));
 	}
 }
 
@@ -129,7 +188,6 @@ void UTileMovementComponent::GetPossibleMoves()
 {
 	// Check whether or not there is a neighour in each of the 4 possible directions 
 	// If there is a tile - set flag to true or reset back to false if there isn't a tile
-
 	PossibleMoves.bCanMoveUp = CanMoveUp();
 	PossibleMoves.bCanMoveDown = CanMoveDown();
 	PossibleMoves.bCanMoveLeft = CanMoveLeft();

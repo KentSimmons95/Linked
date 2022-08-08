@@ -8,9 +8,12 @@
 #include "Components/CapsuleComponent.h"
 #include "Actors/Tile.h"
 #include "Components/TileMovementComponent.h"
+
+#include "GameplayTagContainer.h"
+
 #include "LinkedPlayerPawn.generated.h"
 
-
+class ALinkedPlayerController;
 
 UCLASS()
 class LINKED_API ALinkedPlayerPawn : public APawn
@@ -34,13 +37,26 @@ public:
 
 	//Gets the current tile the pawn is standing on
 	ATile* GetCurrentTile() const;
+	void SetCurrentTile(ATile* NewTile);
 
-	FTileNeighbours GetCurrentTileNeighbours();
+	void UpdateTileNeighbours();
+	ATile* GetNeighbouringTileUp() const;
+	ATile* GetNeighbouringTileDown() const;
+	ATile* GetNeighbouringTileLeft() const;
+	ATile* GetNeighbouringTileRight() const;
+	FTileNeighbours GetCurrentTileNeighbours() const;
+	
+
+	//Set of functions that can be called to move the Pawn on the tiles
+	void MoveUp();
+	void MoveDown();
+	void MoveLeft();
+	void MoveRight();
 
 
 private:
 	UGameplayStatics* GameplayStatics;
-	class ALinkedPlayerController* PlayerController;
+	ALinkedPlayerController* PlayerController;
 
 	//Components
 	UPROPERTY(EditAnywhere)

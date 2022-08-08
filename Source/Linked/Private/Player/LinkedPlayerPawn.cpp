@@ -70,9 +70,70 @@ ATile* ALinkedPlayerPawn::GetCurrentTile() const
 	return CurrentTile;
 }
 
-FTileNeighbours ALinkedPlayerPawn::GetCurrentTileNeighbours()
+void ALinkedPlayerPawn::SetCurrentTile(ATile* NewTile)
+{
+	if (NewTile)
+	{
+		CurrentTile = NewTile;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot set %s as a new tile for %s!"), *NewTile->GetActorNameOrLabel(), *this->GetActorNameOrLabel());
+	}
+}
+
+void ALinkedPlayerPawn::UpdateTileNeighbours()
+{
+	CurrentTileNeighbours = CurrentTile->GetTileNeighbours();
+}
+
+ATile* ALinkedPlayerPawn::GetNeighbouringTileUp() const
+{
+	return CurrentTileNeighbours.UpNeighbour;
+}
+
+ATile* ALinkedPlayerPawn::GetNeighbouringTileDown() const
+{
+	return CurrentTileNeighbours.DownNeighbour;
+}
+
+ATile* ALinkedPlayerPawn::GetNeighbouringTileLeft() const
+{
+	return CurrentTileNeighbours.LeftNeighbour;
+}
+
+ATile* ALinkedPlayerPawn::GetNeighbouringTileRight() const
+{
+	return CurrentTileNeighbours.RightNeighbour;
+}
+
+FTileNeighbours ALinkedPlayerPawn::GetCurrentTileNeighbours() const
 {
 	return CurrentTileNeighbours;
+}
+
+void ALinkedPlayerPawn::MoveUp()
+{
+	if(TileMovementComponent)
+	{
+		//TileMovementComponent->MoveUp();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TileMovementComponent not found!"));
+	}
+}
+
+void ALinkedPlayerPawn::MoveDown()
+{
+}
+
+void ALinkedPlayerPawn::MoveLeft()
+{
+}
+
+void ALinkedPlayerPawn::MoveRight()
+{
 }
 
 void ALinkedPlayerPawn::SetupStartingPosition()
