@@ -25,9 +25,6 @@ void ALinkedPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetupStartingPosition();
-	CurrentTileNeighbours = CurrentTile->GetTileNeighbours();
-
 	PlayerController = Cast<ALinkedPlayerController>(GameplayStatics->GetPlayerController(GetWorld(), 0));
 	if (PlayerController)
 	{
@@ -59,95 +56,19 @@ void ALinkedPlayerPawn::Tick(float DeltaTime)
 	}
 }
 
+
 // Called to bind functionality to input
 void ALinkedPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-ATile* ALinkedPlayerPawn::GetCurrentTile() const
+void ALinkedPlayerPawn::SetStartingPosition(FVector StartPosition)
 {
-	return CurrentTile;
+	this->SetActorLocation(StartPosition);
 }
 
-void ALinkedPlayerPawn::SetCurrentTile(ATile* NewTile)
+void ALinkedPlayerPawn::Move(EMoveDirection Direction)
 {
-	if (NewTile)
-	{
-		CurrentTile = NewTile;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Cannot set %s as a new tile for %s!"), *NewTile->GetActorNameOrLabel(), *this->GetActorNameOrLabel());
-	}
+	TileMovementComponent->MoveToTile(Direction);
 }
-
-void ALinkedPlayerPawn::UpdateTileNeighbours()
-{
-	CurrentTileNeighbours = CurrentTile->GetTileNeighbours();
-}
-
-ATile* ALinkedPlayerPawn::GetNeighbouringTileUp() const
-{
-	return CurrentTileNeighbours.UpNeighbour;
-}
-
-ATile* ALinkedPlayerPawn::GetNeighbouringTileDown() const
-{
-	return CurrentTileNeighbours.DownNeighbour;
-}
-
-ATile* ALinkedPlayerPawn::GetNeighbouringTileLeft() const
-{
-	return CurrentTileNeighbours.LeftNeighbour;
-}
-
-ATile* ALinkedPlayerPawn::GetNeighbouringTileRight() const
-{
-	return CurrentTileNeighbours.RightNeighbour;
-}
-
-FTileNeighbours ALinkedPlayerPawn::GetCurrentTileNeighbours() const
-{
-	return CurrentTileNeighbours;
-}
-
-void ALinkedPlayerPawn::MoveUp()
-{
-	if(TileMovementComponent)
-	{
-		//TileMovementComponent->MoveUp();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("TileMovementComponent not found!"));
-	}
-}
-
-void ALinkedPlayerPawn::MoveDown()
-{
-}
-
-void ALinkedPlayerPawn::MoveLeft()
-{
-}
-
-void ALinkedPlayerPawn::MoveRight()
-{
-}
-
-void ALinkedPlayerPawn::SetupStartingPosition()
-{
-	//Check to see if the pawn has a starting tile
-	if (!PawnStartTile)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No start tile selected for Pawn - %s"), *this->GetActorNameOrLabel());
-		return;
-	}
-
-	CurrentTile = PawnStartTile;
-	
-	//Move the Pawn to its starting Tile
-	this->SetActorLocation(PawnStartTile->GetActorLocation());
-}
-

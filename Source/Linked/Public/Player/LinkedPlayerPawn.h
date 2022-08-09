@@ -35,24 +35,10 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//Gets the current tile the pawn is standing on
-	ATile* GetCurrentTile() const;
-	void SetCurrentTile(ATile* NewTile);
+	void SetStartingPosition(FVector StartPosition);
 
-	void UpdateTileNeighbours();
-	ATile* GetNeighbouringTileUp() const;
-	ATile* GetNeighbouringTileDown() const;
-	ATile* GetNeighbouringTileLeft() const;
-	ATile* GetNeighbouringTileRight() const;
-	FTileNeighbours GetCurrentTileNeighbours() const;
-	
-
-	//Set of functions that can be called to move the Pawn on the tiles
-	void MoveUp();
-	void MoveDown();
-	void MoveLeft();
-	void MoveRight();
-
+	//Calls the TileMovementComponent that is attached to the Pawn to move tile
+	void Move(EMoveDirection Direction);
 
 private:
 	UGameplayStatics* GameplayStatics;
@@ -66,16 +52,9 @@ private:
 	UPROPERTY(EditAnywhere)
 	UTileMovementComponent* TileMovementComponent;
 
-	UPROPERTY(EditAnywhere, Category = "Pawn Information")
-	ATile* PawnStartTile;
-	UPROPERTY(VisibleAnywhere, Category = "Pawn Information")
-	ATile* CurrentTile;
-
-	FTileNeighbours CurrentTileNeighbours;
-
+	//REMOVE?
 	FVector MovementDirection;
 	UPROPERTY()
 	float MovementSpeed = 500.f;
 
-	void SetupStartingPosition();
 };
