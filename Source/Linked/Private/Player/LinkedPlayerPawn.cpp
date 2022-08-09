@@ -10,7 +10,6 @@ ALinkedPlayerPawn::ALinkedPlayerPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
 	CapsuleComponent->SetCapsuleSize(36.0f, 100.0f);
 
@@ -18,6 +17,7 @@ ALinkedPlayerPawn::ALinkedPlayerPawn()
 	SkeletalMesh->AttachToComponent(CapsuleComponent, FAttachmentTransformRules::KeepRelativeTransform);
 
 	TileMovementComponent = CreateDefaultSubobject<UTileMovementComponent>(TEXT("TileMovementComponent"));
+	DirectionComponent = CreateDefaultSubobject<UDirectionComponent>(TEXT("DirectionComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -68,7 +68,17 @@ void ALinkedPlayerPawn::SetStartingPosition(FVector StartPosition)
 	this->SetActorLocation(StartPosition);
 }
 
+EFaceDirection ALinkedPlayerPawn::GetCurrentFaceDirection()
+{
+	return DirectionComponent->GetCurrentFaceDirection();
+}
+
 void ALinkedPlayerPawn::Move(EMoveDirection Direction)
 {
 	TileMovementComponent->MoveToTile(Direction);
+}
+
+void ALinkedPlayerPawn::Turn(EFaceDirection Direction)
+{
+	DirectionComponent->RotateActor(Direction);
 }

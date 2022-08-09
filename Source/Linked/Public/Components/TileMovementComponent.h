@@ -25,10 +25,10 @@ struct FCurrentPossibleMoves
 	bool bCanMoveRight = false;
 };
 
+//Enum to move the actor in the desired direction
 UENUM()
 enum EMoveDirection
 {
-	None	 UMETA(DisplayName = "None"),
 	Up		 UMETA(DisplayName = "Up"),
 	Down	 UMETA(DisplayName = "Down"),
 	Left	 UMETA(DisplayName = "Left"),
@@ -84,7 +84,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Tiles")
 	ATile* TileMovedTo = nullptr;
 
-	/**** Movement - Called by MoveToTile to move the Parent Actor****/
+	/**** Movement - Called by MoveToTile to MOVE the parent actor in the desired direction ****/
 	void MoveUp();
 	void MoveDown();
 	void MoveLeft();

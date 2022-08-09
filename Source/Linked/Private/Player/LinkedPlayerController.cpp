@@ -82,7 +82,15 @@ void ALinkedPlayerController::MoveUp()
 	UE_LOG(LogTemp, Warning, TEXT("Up"));
 	if (Pawns[0])
 	{
-		Pawns[0]->Move(EMoveDirection::Up);
+		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceUp)
+		{
+			Pawns[0]->Turn(EFaceDirection::FaceUp);
+		}
+		else
+		{
+			Pawns[0]->Move(EMoveDirection::Up);
+		}
+		
 	}
 	else
 	{
@@ -95,7 +103,14 @@ void ALinkedPlayerController::MoveDown()
 	UE_LOG(LogTemp, Warning, TEXT("Down"));
 	if (Pawns[0])
 	{
-		Pawns[0]->Move(EMoveDirection::Down);
+		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceDown)
+		{
+			Pawns[0]->Turn(EFaceDirection::FaceDown);
+		}
+		else
+		{
+			Pawns[0]->Move(EMoveDirection::Down);
+		}
 	}
 	else
 	{
@@ -108,7 +123,15 @@ void ALinkedPlayerController::MoveLeft()
 	UE_LOG(LogTemp, Warning, TEXT("Left"));
 	if (Pawns[0])
 	{
-		Pawns[0]->Move(EMoveDirection::Left);
+		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceLeft)
+		{
+			Pawns[0]->Turn(EFaceDirection::FaceLeft);
+		}
+		else
+		{
+
+			Pawns[0]->Move(EMoveDirection::Left);
+		}
 	}
 	else
 	{
@@ -121,7 +144,14 @@ void ALinkedPlayerController::MoveRight()
 	UE_LOG(LogTemp, Warning, TEXT("Right"));
 	if (Pawns[0])
 	{
-		Pawns[0]->Move(EMoveDirection::Right);
+		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceRight)
+		{
+			Pawns[0]->Turn(EFaceDirection::FaceRight);
+		}
+		else
+		{
+			Pawns[0]->Move(EMoveDirection::Right);
+		}
 	}
 	else
 	{

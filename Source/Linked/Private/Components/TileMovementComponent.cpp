@@ -163,7 +163,6 @@ void UTileMovementComponent::CheckVariables()
 
 void UTileMovementComponent::InitTimeline()
 {
-	UE_LOG(LogTemp, Warning, TEXT("InitTimeline"));
 	IsMoving = true;
 
 	FOnTimelineFloat TimelineProgress;
@@ -219,6 +218,8 @@ void UTileMovementComponent::MoveToTile(EMoveDirection Direction)
 	}
 }
 
+
+
 void UTileMovementComponent::MoveUp()
 {
 	if (CanMoveUp() && !IsMoving)
@@ -234,7 +235,7 @@ void UTileMovementComponent::MoveUp()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent!"));
+			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent for Actor: %s"), *ActorOwner->GetActorNameOrLabel());
 		}
 	}
 }
@@ -254,7 +255,7 @@ void UTileMovementComponent::MoveDown()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent!"));
+			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent for Actor: %s"), *ActorOwner->GetActorNameOrLabel());
 		}
 	}
 }
@@ -274,7 +275,7 @@ void UTileMovementComponent::MoveLeft()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent!"));
+			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent for Actor: %s"), *ActorOwner->GetActorNameOrLabel());
 		}
 	}
 }
@@ -294,7 +295,7 @@ void UTileMovementComponent::MoveRight()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent!"));
+			UE_LOG(LogTemp, Warning, TEXT("Missing CurveFloat in MovementComponent for Actor: %s"), *ActorOwner->GetActorNameOrLabel());
 		}
 	}
 }

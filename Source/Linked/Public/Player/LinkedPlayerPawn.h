@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Actors/Tile.h"
 #include "Components/TileMovementComponent.h"
+#include "Components/DirectionComponent.h"
 
 #include "GameplayTagContainer.h"
 
@@ -36,9 +37,11 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void SetStartingPosition(FVector StartPosition);
+	EFaceDirection GetCurrentFaceDirection();
 
 	//Calls the TileMovementComponent that is attached to the Pawn to move tile
 	void Move(EMoveDirection Direction);
+	void Turn(EFaceDirection Direction);
 
 private:
 	UGameplayStatics* GameplayStatics;
@@ -51,6 +54,8 @@ private:
 	USkeletalMeshComponent* SkeletalMesh;
 	UPROPERTY(EditAnywhere)
 	UTileMovementComponent* TileMovementComponent;
+	UPROPERTY(EditAnywhere)
+	UDirectionComponent* DirectionComponent;
 
 	//REMOVE?
 	FVector MovementDirection;
