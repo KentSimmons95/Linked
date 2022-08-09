@@ -16,7 +16,7 @@ UTileMovementComponent::UTileMovementComponent()
 void UTileMovementComponent::TimelineProgress(float Value)
 {
 	FVector NewLocation = FMath::Lerp(StartLoc, EndLoc, Value);
-	PawnOwner->SetActorLocation(NewLocation);
+	ActorOwner->SetActorLocation(NewLocation);
 }
 
 // Called when the game starts
@@ -26,7 +26,7 @@ void UTileMovementComponent::BeginPlay()
 
 	//Get the pawn this component is attached to
 	//PawnOwner = Cast<ALinkedPlayerPawn>(this->GetOwner());
-	PawnOwner = this->GetOwner();
+	ActorOwner = this->GetOwner();
 
 	CheckVariables();
 	UpdateTileNeighbours();
@@ -147,23 +147,18 @@ bool UTileMovementComponent::CanMoveRight() const
 
 void UTileMovementComponent::CheckVariables()
 {
-	//Check that we have a starting tile selected
-	if (!PawnStartTile)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Missing PawnStartTile for: %s -> MovementComponent!"), *PawnOwner->GetActorNameOrLabel());
-	}
-	else
-	{
-		CurrentTile = PawnStartTile;
-	}
-
+	//Check that we have a starting tile selected - then assign it as the CurrentTile
+	checkf(ActorStartTile, TEXT("ActorStartTile has not been set for Actor - %s!"), *ActorOwner->GetActorNameOrLabel());
+	CurrentTile = ActorStartTile;
+	
+	//checkf(CurveFloat, TEXT("CurveFloat has not been set for Actor - %s!"), *ActorOwner->GetActorNameOrLabel());
 	//Check to see if we have a Curve Float inserted in the editor
 	if (!CurveFloat)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Missing a CurveFloat for: %s -> MovementComponent!"), *PawnOwner->GetActorNameOrLabel());
+		UE_LOG(LogTemp, Warning, TEXT("Missing a CurveFloat for: %s -> MovementComponent!"), *ActorOwner->GetActorNameOrLabel());
 	}
 
-	PawnOwner->SetActorLocation(CurrentTile->GetActorLocation());
+	ActorOwner->SetActorLocation(CurrentTile->GetActorLocation());
 }
 
 void UTileMovementComponent::InitTimeline()
@@ -183,11 +178,11 @@ FOnTimelineEvent UTileMovementComponent::OnMoveCompleted()
 	UE_LOG(LogTemp, Warning, TEXT("OnMoveCompleted"));
 
 	FOnTimelineEvent Event;
-	Event.BindUFunction(this, FName("UpdatePawnInformation"));
+	Event.BindUFunction(this, FName("UpdateActorInformation"));
 	return Event;
 }
 
-void UTileMovementComponent::UpdatePawnInformation()
+void UTileMovementComponent::UpdateActorInformation()
 {
 	IsMoving = false;
 

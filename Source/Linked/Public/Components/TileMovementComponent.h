@@ -9,7 +9,6 @@
 #include "TileMovementComponent.generated.h"
 
 class UCurveFloat;
-class ALinkedPlayerPawn;
 
 USTRUCT()
 struct FCurrentPossibleMoves
@@ -36,6 +35,7 @@ enum EMoveDirection
 	Right	 UMETA(DisplayName = "Right")
 };
 
+// Actor Component that allows the owning actor to move on the Tile System
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class LINKED_API UTileMovementComponent : public UActorComponent
 {
@@ -64,27 +64,27 @@ public:
 	ATile* GetNeighbouringTileRight() const;
 	FTileNeighbours GetCurrentTileNeighbours() const;
 	
-	//Moves to pawn to the chosen tile
+	//Moves the actor to the chosen tile
 	void MoveToTile(EMoveDirection Direction);
 
 private:
 
-	/**** TIMELINE ****/
-	FTimeline CurveTimeline;
-	UPROPERTY(EditAnywhere)
+	/**** Timeline properties ****/
+	UPROPERTY(EditAnywhere, Category = "Timeline")
 	UCurveFloat* CurveFloat = nullptr;
+	FTimeline CurveTimeline;
 	FVector StartLoc;
 	FVector EndLoc;
 
-	/*** TILE NEIGHBOUR TRACKING **/
-	UPROPERTY(EditAnywhere, Category = "Pawn Information")
-	ATile* PawnStartTile = nullptr;
+	/**** Tile neighbour tracking ****/
+	UPROPERTY(EditAnywhere, Category = "Actor Information")
+	ATile* ActorStartTile = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Tiles")
 	ATile* CurrentTile = nullptr;
 	UPROPERTY(VisibleAnywhere, Category = "Tiles")
 	ATile* TileMovedTo = nullptr;
 
-	/*** MOVEMENT **/
+	/**** Movement - Called by MoveToTile to move the Parent Actor****/
 	void MoveUp();
 	void MoveDown();
 	void MoveLeft();
@@ -92,11 +92,11 @@ private:
 
 	FTileNeighbours CurrentTileNeighbours;
 
-	UPROPERTY(VisibleAnywhere, Category = "Pawn Information")
+	UPROPERTY(VisibleAnywhere, Category = "Actor Information")
 	bool IsMoving = false;
 	
-	//The ALinkedPlayerPawn that this component is attached to
-	AActor* PawnOwner = nullptr;
+	//The AActor that this component is attached to
+	AActor* ActorOwner = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Interp Speed")
 	float InterpSpeed = 250;
@@ -105,7 +105,7 @@ private:
 	FCurrentPossibleMoves PossibleMoves;
 
 	void GetPossibleMoves();
-	//Checks each direction that the pawn can move in
+	//Checks each direction that the actor can move in
 	bool CanMoveUp() const;
 	bool CanMoveDown() const;
 	bool CanMoveLeft() const;
@@ -117,14 +117,13 @@ private:
 	void CheckVariables();
 	void InitTimeline();
 
-
 	//Controls how the Actor lerps between StartLoc and EndLoc 
 	UFUNCTION()
 	void TimelineProgress(float Value);
 
-	//Calls UpdatePawnInformation() after Timeline is Complete
+	//Calls UpdateActorInformation() after Timeline is Complete
 	FOnTimelineEvent OnMoveCompleted();
-	//Called by OnMoveCompleted() by FOnTimelineEvent - used to update the owning Pawns information
+	//Called by OnMoveCompleted() by FOnTimelineEvent - used to update the owning Actors information
 	UFUNCTION()
-	void UpdatePawnInformation();
+	void UpdateActorInformation();
 };
