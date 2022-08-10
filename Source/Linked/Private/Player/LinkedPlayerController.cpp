@@ -43,6 +43,8 @@ void ALinkedPlayerController::SetupInput()
 	InputComponent->BindAction("Down", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveDown);
 	InputComponent->BindAction("Left", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveLeft);
 	InputComponent->BindAction("Right", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveRight);
+	InputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Interact);
+	InputComponent->BindAction("Link", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Link);
 
 	//TODO Add interact bindings
 }
@@ -157,4 +159,18 @@ void ALinkedPlayerController::MoveRight()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Pawns[0] not found!"));
 	}
+}
+
+void ALinkedPlayerController::Interact()
+{
+	if (Pawns[0])
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Interact button pressed!"));
+		Pawns[0]->Interact();
+	}
+}
+
+void ALinkedPlayerController::Link()
+{
+	Pawns[0]->Link();
 }

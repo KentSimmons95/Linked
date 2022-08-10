@@ -18,12 +18,18 @@ ALinkedPlayerPawn::ALinkedPlayerPawn()
 
 	TileMovementComponent = CreateDefaultSubobject<UTileMovementComponent>(TEXT("TileMovementComponent"));
 	DirectionComponent = CreateDefaultSubobject<UDirectionComponent>(TEXT("DirectionComponent"));
+	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
+	LinkComponent = CreateDefaultSubobject<ULinkComponent>(TEXT("LinkComponent"));
 }
 
 // Called when the game starts or when spawned
 void ALinkedPlayerPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	checkf(TileMovementComponent, TEXT("Failed to find TileMovementComponent on Actor - %s!"), *this->GetActorNameOrLabel());
+	checkf(DirectionComponent, TEXT("Failed to find DirectionComponent on Actor - %s!"), *this->GetActorNameOrLabel());
+	checkf(InteractComponent, TEXT("Failed to find InteractComponent on Actor - %s!"), *this->GetActorNameOrLabel());
 
 	PlayerController = Cast<ALinkedPlayerController>(GameplayStatics->GetPlayerController(GetWorld(), 0));
 	if (PlayerController)
@@ -81,4 +87,17 @@ void ALinkedPlayerPawn::Move(EMoveDirection Direction)
 void ALinkedPlayerPawn::Turn(EFaceDirection Direction)
 {
 	DirectionComponent->RotateActor(Direction);
+}
+
+void ALinkedPlayerPawn::Interact()
+{
+	InteractComponent->Interact();
+}
+
+void ALinkedPlayerPawn::Link()
+{
+	if (ActorToLink != nullptr)
+	{
+		LinkComponent->CreateLinkWithActor(ActorToLink);
+	}
 }

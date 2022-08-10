@@ -6,11 +6,7 @@
 // Sets default values for this component's properties
 UDirectionComponent::UDirectionComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -22,7 +18,6 @@ void UDirectionComponent::BeginPlay()
 	//Get the Owning Actor of this component
 	ActorOwner = this->GetOwner();
 }
-
 
 void UDirectionComponent::RotateActor(EFaceDirection Direction)
 {

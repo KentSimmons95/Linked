@@ -8,7 +8,9 @@
 #include "Components/CapsuleComponent.h"
 #include "Actors/Tile.h"
 #include "Components/TileMovementComponent.h"
+#include "Components/LinkComponent.h"
 #include "Components/DirectionComponent.h"
+#include "Components/InteractComponent.h"
 
 #include "GameplayTagContainer.h"
 
@@ -42,6 +44,8 @@ public:
 	//Calls the TileMovementComponent that is attached to the Pawn to move tile
 	void Move(EMoveDirection Direction);
 	void Turn(EFaceDirection Direction);
+	void Interact();
+	void Link();
 
 private:
 	UGameplayStatics* GameplayStatics;
@@ -56,6 +60,14 @@ private:
 	UTileMovementComponent* TileMovementComponent;
 	UPROPERTY(EditAnywhere)
 	UDirectionComponent* DirectionComponent;
+	UPROPERTY(EditAnywhere)
+	UInteractComponent* InteractComponent;
+	UPROPERTY(EditAnywhere)
+	ULinkComponent* LinkComponent;
+
+	//Testing purposes
+	UPROPERTY(EditAnywhere, Category = "Testing")
+	AActor* ActorToLink;
 
 	//REMOVE?
 	FVector MovementDirection;
