@@ -37,7 +37,6 @@ void UTileMovementComponent::BeginPlay()
 	CurveTimeline.SetTimelineFinishedFunc(OnMoveCompleted());
 }
 
-
 // Called every frame
 void UTileMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
@@ -68,29 +67,14 @@ void UTileMovementComponent::UpdateTileNeighbours()
 	CurrentTileNeighbours = CurrentTile->GetTileNeighbours();
 }
 
-ATile* UTileMovementComponent::GetNeighbouringTileUp() const
-{
-	return CurrentTileNeighbours.UpNeighbour;
-}
-
-ATile* UTileMovementComponent::GetNeighbouringTileDown() const
-{
-	return CurrentTileNeighbours.DownNeighbour;
-}
-
-ATile* UTileMovementComponent::GetNeighbouringTileLeft() const
-{
-	return CurrentTileNeighbours.LeftNeighbour;
-}
-
-ATile* UTileMovementComponent::GetNeighbouringTileRight() const
-{
-	return CurrentTileNeighbours.RightNeighbour;
-}
-
 FTileNeighbours UTileMovementComponent::GetCurrentTileNeighbours() const
 {
 	return CurrentTileNeighbours;
+}
+
+bool UTileMovementComponent::HasMoveCompleted()
+{
+	return !IsMoving;
 }
 
 bool UTileMovementComponent::CanMoveUp() const
@@ -174,8 +158,6 @@ void UTileMovementComponent::InitTimeline()
 
 FOnTimelineEvent UTileMovementComponent::OnMoveCompleted()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnMoveCompleted"));
-
 	FOnTimelineEvent Event;
 	Event.BindUFunction(this, FName("UpdateActorInformation"));
 	return Event;
@@ -183,6 +165,8 @@ FOnTimelineEvent UTileMovementComponent::OnMoveCompleted()
 
 void UTileMovementComponent::UpdateActorInformation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("OnMoveCompleted"));
+
 	IsMoving = false;
 
 	CurrentTile = TileMovedTo;

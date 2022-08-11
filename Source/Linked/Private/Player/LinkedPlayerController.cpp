@@ -44,7 +44,9 @@ void ALinkedPlayerController::SetupInput()
 	InputComponent->BindAction("Left", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveLeft);
 	InputComponent->BindAction("Right", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveRight);
 	InputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Interact);
-	InputComponent->BindAction("Link", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Link);
+	InputComponent->BindAction("Link", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Toggle);
+	
+	
 
 	//TODO Add interact bindings
 }
@@ -170,7 +172,8 @@ void ALinkedPlayerController::Interact()
 	}
 }
 
-void ALinkedPlayerController::Link()
+void ALinkedPlayerController::Toggle()
 {
-	Pawns[0]->Link();
+	Pawns[0]->StopNiagara();
 }
+

@@ -11,9 +11,9 @@
 #include "Components/LinkComponent.h"
 #include "Components/DirectionComponent.h"
 #include "Components/InteractComponent.h"
-
 #include "GameplayTagContainer.h"
-
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraComponent.h"
 #include "LinkedPlayerPawn.generated.h"
 
 class ALinkedPlayerController;
@@ -45,8 +45,8 @@ public:
 	void Move(EMoveDirection Direction);
 	void Turn(EFaceDirection Direction);
 	void Interact();
-	void Link();
 
+	void StopNiagara();
 private:
 	UGameplayStatics* GameplayStatics;
 	ALinkedPlayerController* PlayerController;
@@ -64,14 +64,9 @@ private:
 	UInteractComponent* InteractComponent;
 	UPROPERTY(EditAnywhere)
 	ULinkComponent* LinkComponent;
+	UPROPERTY(EditAnywhere)
+	UNiagaraComponent* NiagaraComponent;	
 
-	//Testing purposes
-	UPROPERTY(EditAnywhere, Category = "Testing")
-	AActor* ActorToLink;
-
-	//REMOVE?
-	FVector MovementDirection;
-	UPROPERTY()
-	float MovementSpeed = 500.f;
-
+	//Update the link - using the TileMovementComponent and LinkComponent
+	void UpdateLink();
 };

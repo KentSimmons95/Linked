@@ -20,6 +20,15 @@ void ULinkComponent::BeginPlay()
 	Super::BeginPlay();
 	
 	ActorOwner = this->GetOwner();
+
+	if (!ActorToLink)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Missing LinkedActor for %s LinkComponent!"), *ActorOwner->GetActorNameOrLabel());
+	}
+	else
+	{
+		CreateLinkWithActor();
+	}
 }
 
 
@@ -28,65 +37,16 @@ void ULinkComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if (bIsCurrentlyLinked)
-	{
-		if (!LinkedActor)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("LinkedActor not found!"));
-			return;
-		}
-		else
-		{
-			SpawnLinkParticle();
-			UE_LOG(LogTemp, Warning, TEXT("Linked!"));
-		}
-	}
 }
 
-void ULinkComponent::CreateLinkWithActor(AActor* ActorToLink)
-{
-	if (bIsCurrentlyLinked)
-	{
-		PreviousLinkedActor = LinkedActor;
-		//Break link with existing link - then establish a new link 
-		BreakCurrentLinkWithActor();
-		if (ActorToLink == PreviousLinkedActor)
-		{
-			LinkedActor = nullptr;
-			PreviousLinkedActor = nullptr;
-			bIsCurrentlyLinked = false;
-			return;
-		}
-		/*
-		else
-		{
-			LinkedActor = ActorToLink;
-			bIsCurrentlyLinked = true;
-		}
-		*/
-	}
-	else
-	{
-		LinkedActor = ActorToLink;
-		bIsCurrentlyLinked = true;
-	}
-}
 
-void ULinkComponent::BreakCurrentLinkWithActor()
+bool ULinkComponent::HasLineOfSight()
 {
-	if (LinkedActor != nullptr)
+	if (!ActorToLink)
 	{
-		LinkedActor = nullptr;
-		bIsCurrentlyLinked = true;
+		UE_LOG(LogTemp, Warning, TEXT("Missing LinkedActor for %s LinkComponent!"), *ActorOwner->GetActorNameOrLabel());
+		return false;
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Currently not linked to any actor!"));
-	}
-}
-
-void ULinkComponent::SpawnLinkParticle()
-{
 	bool bHit = false;
 
 	FVector CurrentLocation = ActorOwner->GetActorLocation();
@@ -94,7 +54,7 @@ void ULinkComponent::SpawnLinkParticle()
 	FHitResult Hit;
 
 	FVector Start = CurrentLocation;
-	FVector End = LinkedActor->GetActorLocation();
+	FVector End = ActorToLink->GetActorLocation();
 
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(ActorOwner);
@@ -109,17 +69,37 @@ void ULinkComponent::SpawnLinkParticle()
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Actors hit!"));
+		UE_LOG(LogTemp, Warning, TEXT("No line of sight with Actor: %s!"), *ActorToLink->GetActorNameOrLabel());
+	}
+
+	return bHit;
+}
+void ULinkComponent::CreateLinkWithActor()
+{
+	if (!bIsCurrentlyLinked)
+	{
+		if (HasLineOfSight())
+		{
+			bIsCurrentlyLinked = true;
+		}
+		else
+		{
+			bIsCurrentlyLinked = false;
+		}
 	}
 }
 
 AActor* ULinkComponent::GetCurrentLinkedActor()
 {
-	return LinkedActor;
+	return ActorToLink;
 }
 
 bool ULinkComponent::IsCurrentlyLinked()
 {
 	return bIsCurrentlyLinked;
+}
+
+void ULinkComponent::UpdateLinkStatus()
+{
 }
 

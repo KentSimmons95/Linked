@@ -20,6 +20,7 @@ ALinkedPlayerPawn::ALinkedPlayerPawn()
 	DirectionComponent = CreateDefaultSubobject<UDirectionComponent>(TEXT("DirectionComponent"));
 	InteractComponent = CreateDefaultSubobject<UInteractComponent>(TEXT("InteractComponent"));
 	LinkComponent = CreateDefaultSubobject<ULinkComponent>(TEXT("LinkComponent"));
+	NiagaraComponent = CreateDefaultSubobject<UNiagaraComponent>(TEXT("NiagaraComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -55,10 +56,15 @@ void ALinkedPlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (!MovementDirection.IsZero())
+	UpdateLink();
+
+	if (!NiagaraComponent)
 	{
-		const FVector NewLocation = GetActorLocation() + (MovementDirection * DeltaTime * MovementSpeed);
-		SetActorLocation(NewLocation);
+		return;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NiagaraSystem attached on: %s"), *this->GetActorNameOrLabel());
 	}
 }
 
@@ -94,10 +100,19 @@ void ALinkedPlayerPawn::Interact()
 	InteractComponent->Interact();
 }
 
-void ALinkedPlayerPawn::Link()
+void ALinkedPlayerPawn::UpdateLink()
 {
-	if (ActorToLink != nullptr)
+	if (TileMovementComponent->HasMoveCompleted())
 	{
-		LinkComponent->CreateLinkWithActor(ActorToLink);
+		//UE_LOG(LogTemp, Warning, TEXT("%s HasMoveCompleted = TRUE"), *this->GetActorNameOrLabel());
 	}
+	else
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("%s HasMoveCompleted = FALSE"), *this->GetActorNameOrLabel());
+	}
+}
+
+void ALinkedPlayerPawn::StopNiagara()
+{
+	NiagaraComponent->SetVisibility(false);
 }

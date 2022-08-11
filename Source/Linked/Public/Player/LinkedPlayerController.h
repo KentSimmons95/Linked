@@ -40,5 +40,6 @@ private:
 	void MoveRight();
 
 	void Interact();
-	void Link();
+
+	void Toggle();
 };

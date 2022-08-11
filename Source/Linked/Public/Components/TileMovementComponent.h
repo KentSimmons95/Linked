@@ -57,13 +57,12 @@ public:
 	void SetCurrentTile(ATile* NewTile);
 	void UpdateTileNeighbours();
 
-	//TODO - Move or Remove?
-	ATile* GetNeighbouringTileUp() const;
-	ATile* GetNeighbouringTileDown() const;
-	ATile* GetNeighbouringTileLeft() const;
-	ATile* GetNeighbouringTileRight() const;
+	//TODO - Remove?
 	FTileNeighbours GetCurrentTileNeighbours() const;
 	
+	//Check if we have completed the move
+	bool HasMoveCompleted();
+
 	//Moves the actor to the chosen tile
 	void MoveToTile(EMoveDirection Direction);
 
