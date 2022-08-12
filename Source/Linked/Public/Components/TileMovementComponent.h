@@ -63,6 +63,12 @@ public:
 	//Check if we have completed the move
 	bool HasMoveCompleted();
 
+	//Checks each direction that the actor can move in
+	bool CanMoveUp()    const;
+	bool CanMoveDown()  const;
+	bool CanMoveLeft()  const;
+	bool CanMoveRight() const;
+
 	//Moves the actor to the chosen tile
 	void MoveToTile(EMoveDirection Direction);
 
@@ -104,11 +110,6 @@ private:
 	FCurrentPossibleMoves PossibleMoves;
 
 	void GetPossibleMoves();
-	//Checks each direction that the actor can move in
-	bool CanMoveUp() const;
-	bool CanMoveDown() const;
-	bool CanMoveLeft() const;
-	bool CanMoveRight() const;
 
 	/*Function to check that all the required fields are initiated in editor
 	 *Called at BeginPlay() 

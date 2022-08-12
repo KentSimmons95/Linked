@@ -74,6 +74,7 @@ FTileNeighbours UTileMovementComponent::GetCurrentTileNeighbours() const
 
 bool UTileMovementComponent::HasMoveCompleted()
 {
+	//Return the NOT of IsMoving - if we are moving then the moving is NOT completed (false)
 	return !IsMoving;
 }
 
@@ -132,14 +133,18 @@ bool UTileMovementComponent::CanMoveRight() const
 void UTileMovementComponent::CheckVariables()
 {
 	//Check that we have a starting tile selected - then assign it as the CurrentTile
-	checkf(ActorStartTile, TEXT("ActorStartTile has not been set for Actor - %s!"), *ActorOwner->GetActorNameOrLabel());
+	if (!ActorStartTile)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("ActorStartTile has not been set for Actor - %s!"), *ActorOwner->GetActorNameOrLabel());
+		return;
+	}
 	CurrentTile = ActorStartTile;
 	
-	//checkf(CurveFloat, TEXT("CurveFloat has not been set for Actor - %s!"), *ActorOwner->GetActorNameOrLabel());
 	//Check to see if we have a Curve Float inserted in the editor
 	if (!CurveFloat)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Missing a CurveFloat for: %s -> MovementComponent!"), *ActorOwner->GetActorNameOrLabel());
+		return;
 	}
 
 	ActorOwner->SetActorLocation(CurrentTile->GetActorLocation());

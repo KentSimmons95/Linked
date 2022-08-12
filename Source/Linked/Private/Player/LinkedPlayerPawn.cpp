@@ -35,20 +35,12 @@ void ALinkedPlayerPawn::BeginPlay()
 	PlayerController = Cast<ALinkedPlayerController>(GameplayStatics->GetPlayerController(GetWorld(), 0));
 	if (PlayerController)
 	{
-		if (PlayerController->RegisterPlayerPawns(this))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Register to ALinkedPlayerController Successful!"));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Register to ALinkedPlayerController Failed!"));
-		}
+		PlayerController->RegisterPlayerPawns(this);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to locate ALinkedPlayerController!"));
 	}
-	
 }
 
 // Called every frame
@@ -56,18 +48,13 @@ void ALinkedPlayerPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	UpdateLink();
-
 	if (!NiagaraComponent)
 	{
 		return;
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("NiagaraSystem attached on: %s"), *this->GetActorNameOrLabel());
-	}
-}
 
+	UpdateLink();
+}
 
 // Called to bind functionality to input
 void ALinkedPlayerPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -80,7 +67,7 @@ void ALinkedPlayerPawn::SetStartingPosition(FVector StartPosition)
 	this->SetActorLocation(StartPosition);
 }
 
-EFaceDirection ALinkedPlayerPawn::GetCurrentFaceDirection()
+EFaceDirection ALinkedPlayerPawn::GetCurrentFaceDirection() const
 {
 	return DirectionComponent->GetCurrentFaceDirection();
 }
@@ -100,19 +87,76 @@ void ALinkedPlayerPawn::Interact()
 	InteractComponent->Interact();
 }
 
+bool ALinkedPlayerPawn::LinkedStatus()
+{
+	return LinkComponent->IsCurrentlyLinked();
+}
+
+bool ALinkedPlayerPawn::CanMoveUp() const
+{
+	return TileMovementComponent->CanMoveUp();
+}
+
+bool ALinkedPlayerPawn::CanMoveDown() const
+{
+	return TileMovementComponent->CanMoveDown();
+}
+
+bool ALinkedPlayerPawn::CanMoveLeft() const
+{
+	return TileMovementComponent->CanMoveLeft();
+}
+
+bool ALinkedPlayerPawn::CanMoveRight() const
+{
+	return TileMovementComponent->CanMoveRight();
+}
+
+bool ALinkedPlayerPawn::CanMoveInDirection(EMoveDirection MoveDirection) const
+{
+	switch (MoveDirection)
+	{
+	case EMoveDirection::Up:
+		return CanMoveUp();
+		break;
+	case EMoveDirection::Down:
+		return CanMoveDown();
+		break;
+	case EMoveDirection::Left:
+		return CanMoveLeft();
+		break;
+	case EMoveDirection::Right:
+		return CanMoveRight();
+		break;
+	default:
+		UE_LOG(LogTemp, Warning, TEXT("Failed to find a valid move direction for Pawn: %s!"), *this->GetActorNameOrLabel());
+		return false;
+	}
+}
+
+bool ALinkedPlayerPawn::IsFacingDirection(EFaceDirection Direction)
+{
+	if (DirectionComponent->GetCurrentFaceDirection() == Direction)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void ALinkedPlayerPawn::UpdateLink()
 {
 	if (TileMovementComponent->HasMoveCompleted())
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("%s HasMoveCompleted = TRUE"), *this->GetActorNameOrLabel());
+		if (LinkComponent->HasLineOfSight())
+		{
+			NiagaraComponent->SetVisibility(true);
+		}
+		else
+		{
+			NiagaraComponent->SetVisibility(false);
+		}
 	}
-	else
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("%s HasMoveCompleted = FALSE"), *this->GetActorNameOrLabel());
-	}
-}
-
-void ALinkedPlayerPawn::StopNiagara()
-{
-	NiagaraComponent->SetVisibility(false);
 }

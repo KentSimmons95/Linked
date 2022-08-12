@@ -11,25 +11,23 @@ void ALinkedPlayerController::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Hello World"));
 }
 
-bool ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
+void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
 {
-	bool bRegisterSucces = false;
-	
-	if (PlayerPawn)
+	if (PlayerPawn->ActorHasTag("LeftPawn"))
 	{
-		Pawns.Add(PlayerPawn);
-		NumPawns++;
-
-		FString PawnName = PlayerPawn->GetActorNameOrLabel();
-		UE_LOG(LogTemp, Warning, TEXT("%s added to PlayerController"), *PawnName);
-
-		bRegisterSucces = true;
-		return bRegisterSucces;
+		LeftPawn = PlayerPawn;
+		LeftPawnRegistered = true;
+		UE_LOG(LogTemp, Warning, TEXT("%s successfully added to PlayerController"), *LeftPawn->GetActorNameOrLabel());
+	}
+	else if (PlayerPawn->ActorHasTag("RightPawn"))
+	{
+		RightPawn = PlayerPawn;
+		RightPawnRegistered = true;
+		UE_LOG(LogTemp, Warning, TEXT("%s successfully added to PlayerController"), *RightPawn->GetActorNameOrLabel());
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to register ALinkedPlayerPawn!"));
-		return bRegisterSucces;
+		UE_LOG(LogTemp, Warning, TEXT("%s failed to register to PlayerController"), *PlayerPawn->GetActorNameOrLabel());
 	}
 }
 
@@ -38,142 +36,324 @@ void ALinkedPlayerController::SetupInput()
 	EnableInput(this);
 	check(InputComponent);
 
-	//Action Input Bindings
-	InputComponent->BindAction("Up", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveUp);
-	InputComponent->BindAction("Down", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveDown);
-	InputComponent->BindAction("Left", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveLeft);
-	InputComponent->BindAction("Right", EInputEvent::IE_Released, this, &ALinkedPlayerController::MoveRight);
-	InputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Interact);
-	InputComponent->BindAction("Link", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Toggle);
-	
-	
+	//Action Input Bindings for LeftPawn
+	InputComponent->BindAction("LeftPawnUp", EInputEvent::IE_Released, this, &ALinkedPlayerController::LeftPawnMoveUp);
+	InputComponent->BindAction("LeftPawnDown", EInputEvent::IE_Released, this, &ALinkedPlayerController::LeftPawnMoveDown);
+	InputComponent->BindAction("LeftPawnLeft", EInputEvent::IE_Released, this, &ALinkedPlayerController::LeftPawnMoveLeft);
+	InputComponent->BindAction("LeftPawnRight", EInputEvent::IE_Released, this, &ALinkedPlayerController::LeftPawnMoveRight);
 
-	//TODO Add interact bindings
+	//Action Input Bindings for RightPawn
+	InputComponent->BindAction("RightPawnUp", EInputEvent::IE_Released, this, &ALinkedPlayerController::RightPawnMoveUp);
+	InputComponent->BindAction("RightPawnDown", EInputEvent::IE_Released, this, &ALinkedPlayerController::RightPawnMoveDown);
+	InputComponent->BindAction("RightPawnLeft", EInputEvent::IE_Released, this, &ALinkedPlayerController::RightPawnMoveLeft);
+	InputComponent->BindAction("RightPawnRight", EInputEvent::IE_Released, this, &ALinkedPlayerController::RightPawnMoveRight);
+
+	//Add interact bindings
+	InputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Interact);
 }
 
-bool ALinkedPlayerController::HasLineOfSight()
+
+void ALinkedPlayerController::LeftPawnMoveUp()
 {
-	bool bHit = false;
-	
-	FVector Location = Pawns[0]->GetActorLocation();
-	FRotator Rotation = Pawns[0]->GetActorRotation();
-	FHitResult Hit;
-
-	FVector Start = Location;
-	FVector End = Pawns[1]->GetActorLocation();
-
-	FCollisionQueryParams TraceParams;
-	TraceParams.AddIgnoredActor(Pawns[0]);
-
-	bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Pawn, TraceParams);
-
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
-
-	if (bHit)
+	if (!LeftPawn)
 	{
-		DrawDebugBox(GetWorld(), Hit.ImpactPoint, FVector(20, 20, 20), FColor::Blue, false, 2.0f);
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move LeftPawn up because LeftPawn is invalid!"));
+		return;
+	}
+	else
+	{
+		//If both left and right pawn are facing up then move
+		//Else rotate the pawns to face up before moving
+		if(LeftPawn->IsFacingDirection(EFaceDirection::FaceUp) && RightPawn->IsFacingDirection(EFaceDirection::FaceUp))
+		{
+			//Then check that both pawns can move up before moving
+			if (LeftPawn->CanMoveUp() && RightPawn->CanMoveUp())
+			{
+				LeftPawn->Move(EMoveDirection::Up);
+				RightPawn->Move(EMoveDirection::Up);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Failed to move up!"));
+			}
+		}
+		else
+		{
+			LeftPawn->Turn(EFaceDirection::FaceUp);
+			RightPawn->Turn(EFaceDirection::FaceUp);
+		}
+	}
+}
+
+void ALinkedPlayerController::LeftPawnMoveDown()
+{
+	if (!LeftPawn)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move LeftPawn up because LeftPawn is invalid!"));
+		return;
+	}
+	else
+	{
+		//If both left and right pawn are facing up then move
+		//Else rotate the pawns to face up before moving
+		if (LeftPawn->IsFacingDirection(EFaceDirection::FaceDown) && RightPawn->IsFacingDirection(EFaceDirection::FaceDown))
+		{
+			//Then check that both pawns can move up before moving
+			if (LeftPawn->CanMoveDown() && RightPawn->CanMoveDown())
+			{
+				LeftPawn->Move(EMoveDirection::Down);
+				RightPawn->Move(EMoveDirection::Down);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Failed to move down!"));
+			}
+		}
+		else
+		{
+			LeftPawn->Turn(EFaceDirection::FaceDown);
+			RightPawn->Turn(EFaceDirection::FaceDown);
+		}
+	}
+}
+/*
+void ALinkedPlayerController::LeftPawnMoveLeft()
+{
+}
+void ALinkedPlayerController::LeftPawnMoveRight()
+{
+}
+*/
+void ALinkedPlayerController::LeftPawnMoveLeft()
+{
+	if (!LeftPawn)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move LeftPawn up because LeftPawn is invalid!"));
+		return;
+	}
+	else
+	{
+		//If we are currently linked then boths pawns will move left (if they can)
+		if (LeftPawn->LinkedStatus())
+		{
+			if (IsFacingSameDirection(EFaceDirection::FaceLeft))
+			{
+				if (CanBothMoveInDirection(EMoveDirection::Left))
+				{
+					MoveBothInDirection(EMoveDirection::Left);
+				}
+			}
+			else
+			{
+				TurnSameDirection(EFaceDirection::FaceLeft);
+			}
+		}
+		else
+		{
+			//The pawns aren't linked - so we are moving just the left pawn to the left
+			if (LeftPawn->IsFacingDirection(EFaceDirection::FaceLeft) && LeftPawn->CanMoveLeft())
+			{
+				LeftPawn->Move(EMoveDirection::Left);
+			}
+			else
+			{
+				LeftPawn->Turn(EFaceDirection::FaceLeft);
+			}
+		}
+	}
+}
+
+void ALinkedPlayerController::LeftPawnMoveRight()
+{
+	if (!LeftPawn)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move LeftPawn up because LeftPawn is invalid!"));
+		return;
+	}
+	else
+	{
+		//If we are currently linked then boths pawns will move left (if they can)
+		if (LeftPawn->LinkedStatus())
+		{
+			if (IsFacingSameDirection(EFaceDirection::FaceRight))
+			{
+				if (CanBothMoveInDirection(EMoveDirection::Right))
+				{
+					MoveBothInDirection(EMoveDirection::Right);
+				}
+			}
+			else
+			{
+				TurnSameDirection(EFaceDirection::FaceRight);
+			}
+		}
+		else
+		{
+			//The pawns aren't linked - so we are moving just the left pawn to the right
+			if (LeftPawn->IsFacingDirection(EFaceDirection::FaceRight) && LeftPawn->CanMoveRight())
+			{
+				LeftPawn->Move(EMoveDirection::Right);
+			}
+			else
+			{
+				LeftPawn->Turn(EFaceDirection::FaceRight);
+			}
+		}
+	}
+}
+
+void ALinkedPlayerController::RightPawnMoveUp()
+{
+	if (RightPawn)
+	{
+		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceUp)
+		{
+			RightPawn->Turn(EFaceDirection::FaceUp);
+		}
+		else
+		{
+			RightPawn->Move(EMoveDirection::Up);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn up!"));
+	}
+}
+
+void ALinkedPlayerController::RightPawnMoveDown()
+{
+	if (RightPawn)
+	{
+		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceDown)
+		{
+			RightPawn->Turn(EFaceDirection::FaceDown);
+		}
+		else
+		{
+			RightPawn->Move(EMoveDirection::Down);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn down!"));
+	}
+}
+
+void ALinkedPlayerController::RightPawnMoveLeft()
+{
+	if (RightPawn)
+	{
+		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceLeft)
+		{
+			RightPawn->Turn(EFaceDirection::FaceLeft);
+		}
+		else
+		{
+
+			RightPawn->Move(EMoveDirection::Left);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn left!"));
+	}
+}
+
+void ALinkedPlayerController::RightPawnMoveRight()
+{
+	if (RightPawn)
+	{
+		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceRight)
+		{
+			RightPawn->Turn(EFaceDirection::FaceRight);
+		}
+		else
+		{
+			RightPawn->Move(EMoveDirection::Right);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn right!"));
+	}
+}
+bool ALinkedPlayerController::IsFacingSameDirection(EFaceDirection FaceDirection)
+{
+	if (LeftPawn->IsFacingDirection(FaceDirection) && RightPawn->IsFacingDirection(FaceDirection))
+	{
 		return true;
 	}
 	else
 	{
-		DrawDebugBox(GetWorld(), Hit.ImpactPoint, FVector(20, 20, 20), FColor::Blue, false, 2.0f);
+		return false;
+	}
+}
+void ALinkedPlayerController::TurnSameDirection(EFaceDirection FaceDirection)
+{
+	LeftPawn->Turn(FaceDirection);
+	RightPawn->Turn(FaceDirection);
+}
+bool ALinkedPlayerController::CanBothMoveInDirection(EMoveDirection MoveDirection)
+{
+	if (LeftPawn->CanMoveInDirection(MoveDirection) && RightPawn->CanMoveInDirection(MoveDirection))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+void ALinkedPlayerController::MoveBothInDirection(EMoveDirection MoveDirection)
+{
+	LeftPawn->Move(MoveDirection);
+	RightPawn->Move(MoveDirection);
+}
+/*
+bool ALinkedPlayerController::IsFacingSameDirection(EFaceDirection FaceDirection)
+{
+	if (LeftPawn->IsFacingDirection(FaceDirection) && RightPawn->IsFacingDirection(FaceDirection))
+	{
+		return true;
+	}
+	else
+	{
 		return false;
 	}
 }
 
-void ALinkedPlayerController::MoveUp()
+void ALinkedPlayerController::TurnSameDirection(EFaceDirection FaceDirection)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Up"));
-	if (Pawns[0])
+	LeftPawn->Turn(FaceDirection);
+	RightPawn->Turn(FaceDirection);
+}
+
+bool ALinkedPlayerController::CanBothMoveInDirection(EMoveDirection MoveDirection)
+{
+	if (LeftPawn->CanMoveInDirection(MoveDirection) && RightPawn->CanMoveInDirection(MoveDirection))
 	{
-		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceUp)
-		{
-			Pawns[0]->Turn(EFaceDirection::FaceUp);
-		}
-		else
-		{
-			Pawns[0]->Move(EMoveDirection::Up);
-		}
-		
+		return true;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Pawns[0] not found!"));
+		return false;
 	}
 }
 
-void ALinkedPlayerController::MoveDown()
+void ALinkedPlayerController::MoveBothInDirection(EMoveDirection MoveDirection)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Down"));
-	if (Pawns[0])
-	{
-		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceDown)
-		{
-			Pawns[0]->Turn(EFaceDirection::FaceDown);
-		}
-		else
-		{
-			Pawns[0]->Move(EMoveDirection::Down);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Pawns[0] not found!"));
-	}
+	LeftPawn->Move(MoveDirection);
+	RightPawn->Move(MoveDirection);
 }
-
-void ALinkedPlayerController::MoveLeft()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Left"));
-	if (Pawns[0])
-	{
-		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceLeft)
-		{
-			Pawns[0]->Turn(EFaceDirection::FaceLeft);
-		}
-		else
-		{
-
-			Pawns[0]->Move(EMoveDirection::Left);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Pawns[0] not found!"));
-	}
-}
-
-void ALinkedPlayerController::MoveRight()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Right"));
-	if (Pawns[0])
-	{
-		if (Pawns[0]->GetCurrentFaceDirection() != EFaceDirection::FaceRight)
-		{
-			Pawns[0]->Turn(EFaceDirection::FaceRight);
-		}
-		else
-		{
-			Pawns[0]->Move(EMoveDirection::Right);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Pawns[0] not found!"));
-	}
-}
+*/
 
 void ALinkedPlayerController::Interact()
 {
-	if (Pawns[0])
+	if (LeftPawn)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Interact button pressed!"));
-		Pawns[0]->Interact();
+		LeftPawn->Interact();
 	}
-}
-
-void ALinkedPlayerController::Toggle()
-{
-	Pawns[0]->StopNiagara();
 }
 

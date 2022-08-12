@@ -27,24 +27,24 @@ public:
 	//Creates a link with an Actor
 	//void CreateLinkWithActor(AActor* ActorToLink);
 	void CreateLinkWithActor();
-	
-	AActor* GetCurrentLinkedActor();
-	bool IsCurrentlyLinked();
 
-	//Called by the Actor Owner once the move have finished
-	void UpdateLinkStatus();
+	AActor* GetCurrentLinkedActor();
+
+	//Returns the current linked status to this Actor
+	bool IsCurrentlyLinked();
+	bool HasLineOfSight();
 
 private:
 
 	AActor* ActorOwner = nullptr;
 	//The actor that is linked to this actor
 	UPROPERTY(EditAnywhere, Category = "Target")
-	AActor* ActorToLink = nullptr;
+	AActor* LinkedActor = nullptr;
 	
+	AActor* HitActor = nullptr;
+
 	UPROPERTY(VisibleAnywhere, Category = "Link Status")
 	bool bIsCurrentlyLinked = false;
-	UPROPERTY(VisibleAnywhere, Category = "Link Status")
-	bool bIsSightBlocked = false;
 
-	bool HasLineOfSight();
+	
 };

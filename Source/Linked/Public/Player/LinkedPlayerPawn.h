@@ -39,14 +39,27 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void SetStartingPosition(FVector StartPosition);
-	EFaceDirection GetCurrentFaceDirection();
+	EFaceDirection GetCurrentFaceDirection() const;
+
+	//Get whether we are facing a certain direction
+	bool IsFacingDirection(EFaceDirection Direction);
 
 	//Calls the TileMovementComponent that is attached to the Pawn to move tile
 	void Move(EMoveDirection Direction);
 	void Turn(EFaceDirection Direction);
 	void Interact();
 
-	void StopNiagara();
+	//The current link status of the Pawn
+	bool LinkedStatus();
+
+	//Wrapper to allow access to the Pawns TileMovementComponent move directions
+	bool CanMoveUp()    const;
+	bool CanMoveDown()  const;
+	bool CanMoveLeft()  const;
+	bool CanMoveRight() const;
+
+	bool CanMoveInDirection(EMoveDirection MoveDirection) const;
+
 private:
 	UGameplayStatics* GameplayStatics;
 	ALinkedPlayerController* PlayerController;

@@ -21,7 +21,7 @@ void ULinkComponent::BeginPlay()
 	
 	ActorOwner = this->GetOwner();
 
-	if (!ActorToLink)
+	if (!LinkedActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Missing LinkedActor for %s LinkComponent!"), *ActorOwner->GetActorNameOrLabel());
 	}
@@ -39,10 +39,12 @@ void ULinkComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 }
 
-
+//If the Pawns have direct line of sight of each other then they are considered linked
 bool ULinkComponent::HasLineOfSight()
 {
-	if (!ActorToLink)
+	checkf(LinkedActor, TEXT("ActorToLink is missing for Parent %s"), *ActorOwner->GetActorNameOrLabel());
+
+	if (!LinkedActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Missing LinkedActor for %s LinkComponent!"), *ActorOwner->GetActorNameOrLabel());
 		return false;
@@ -54,22 +56,29 @@ bool ULinkComponent::HasLineOfSight()
 	FHitResult Hit;
 
 	FVector Start = CurrentLocation;
-	FVector End = ActorToLink->GetActorLocation();
+	FVector End = LinkedActor->GetActorLocation();
 
 	FCollisionQueryParams TraceParams;
 	TraceParams.AddIgnoredActor(ActorOwner);
 
-	bHit = GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Pawn, TraceParams);
+	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Pawn, TraceParams);
+
+	HitActor = Hit.GetActor();
 
 	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 
-	if (bHit)
+	if (HitActor == LinkedActor)
 	{
 		DrawDebugBox(GetWorld(), Hit.ImpactPoint, FVector(20, 20, 20), FColor::Blue, false, 2.0f);
+		bIsCurrentlyLinked = true;
+		//UE_LOG(LogTemp, Warning, TEXT("Line of sight with: %s!"), *LinkedActor->GetActorNameOrLabel());
+		bHit = true;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No line of sight with Actor: %s!"), *ActorToLink->GetActorNameOrLabel());
+		//UE_LOG(LogTemp, Warning, TEXT("No line of sight with Actor: %s!"), *LinkedActor->GetActorNameOrLabel());
+		bIsCurrentlyLinked = false;
+		bHit = false;
 	}
 
 	return bHit;
@@ -91,7 +100,7 @@ void ULinkComponent::CreateLinkWithActor()
 
 AActor* ULinkComponent::GetCurrentLinkedActor()
 {
-	return ActorToLink;
+	return LinkedActor;
 }
 
 bool ULinkComponent::IsCurrentlyLinked()
@@ -99,7 +108,4 @@ bool ULinkComponent::IsCurrentlyLinked()
 	return bIsCurrentlyLinked;
 }
 
-void ULinkComponent::UpdateLinkStatus()
-{
-}
 
