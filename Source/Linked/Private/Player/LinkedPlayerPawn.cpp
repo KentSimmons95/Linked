@@ -146,6 +146,11 @@ bool ALinkedPlayerPawn::IsFacingDirection(EFaceDirection Direction)
 	}
 }
 
+bool ALinkedPlayerPawn::IsPawnMoving()
+{
+	return TileMovementComponent->IsCurrentlyMoving();
+}
+
 void ALinkedPlayerPawn::UpdateLink()
 {
 	if (TileMovementComponent->HasMoveCompleted())

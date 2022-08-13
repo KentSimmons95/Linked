@@ -43,6 +43,8 @@ public:
 
 	//Get whether we are facing a certain direction
 	bool IsFacingDirection(EFaceDirection Direction);
+	//Get whether the pawn is moving or not
+	bool IsPawnMoving();
 
 	//Calls the TileMovementComponent that is attached to the Pawn to move tile
 	void Move(EMoveDirection Direction);

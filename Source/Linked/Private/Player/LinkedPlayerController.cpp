@@ -13,6 +13,7 @@ void ALinkedPlayerController::BeginPlay()
 
 void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
 {
+	//Register the Player Pawns to the controller based on their Actor Tags
 	if (PlayerPawn->ActorHasTag("LeftPawn"))
 	{
 		LeftPawn = PlayerPawn;
@@ -116,14 +117,7 @@ void ALinkedPlayerController::LeftPawnMoveDown()
 		}
 	}
 }
-/*
-void ALinkedPlayerController::LeftPawnMoveLeft()
-{
-}
-void ALinkedPlayerController::LeftPawnMoveRight()
-{
-}
-*/
+
 void ALinkedPlayerController::LeftPawnMoveLeft()
 {
 	if (!LeftPawn)
@@ -202,115 +196,152 @@ void ALinkedPlayerController::LeftPawnMoveRight()
 	}
 }
 
+//Could just use LeftPawnMoveUp() - leaving it here incase RightPawn movement can do more
 void ALinkedPlayerController::RightPawnMoveUp()
 {
-	if (RightPawn)
+	if (!RightPawn || !LeftPawn)
 	{
-		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceUp)
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn up because the RightPawn OR LeftPawn are invalid!"));
+		return;
+	}
+	else
+	{
+		//If both left and right pawn are facing up then move
+		//Else rotate the pawns to face up before moving
+		if (LeftPawn->IsFacingDirection(EFaceDirection::FaceUp) && RightPawn->IsFacingDirection(EFaceDirection::FaceUp))
 		{
+			//Then check that both pawns can move up before moving
+			if (LeftPawn->CanMoveUp() && RightPawn->CanMoveUp())
+			{
+				LeftPawn->Move(EMoveDirection::Up);
+				RightPawn->Move(EMoveDirection::Up);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Failed to move up!"));
+			}
+		}
+		else
+		{
+			LeftPawn->Turn(EFaceDirection::FaceUp);
 			RightPawn->Turn(EFaceDirection::FaceUp);
 		}
-		else
-		{
-			RightPawn->Move(EMoveDirection::Up);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn up!"));
 	}
 }
 
+//Could just use LeftPawnMoveUp() - leaving it here incase RightPawn movement can do more
 void ALinkedPlayerController::RightPawnMoveDown()
 {
-	if (RightPawn)
+	if (!RightPawn || !LeftPawn)
 	{
-		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceDown)
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn down because the RightPawn OR LeftPawn are invalid!"));
+		return;
+	}
+	else
+	{
+		//If both left and right pawn are facing up then move
+		//Else rotate the pawns to face up before moving
+		if (LeftPawn->IsFacingDirection(EFaceDirection::FaceDown) && RightPawn->IsFacingDirection(EFaceDirection::FaceDown))
 		{
+			//Then check that both pawns can move up before moving
+			if (LeftPawn->CanMoveDown() && RightPawn->CanMoveDown())
+			{
+				LeftPawn->Move(EMoveDirection::Down);
+				RightPawn->Move(EMoveDirection::Down);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Failed to move down!"));
+			}
+		}
+		else
+		{
+			LeftPawn->Turn(EFaceDirection::FaceDown);
 			RightPawn->Turn(EFaceDirection::FaceDown);
 		}
-		else
-		{
-			RightPawn->Move(EMoveDirection::Down);
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn down!"));
 	}
 }
 
+//Could just use LeftPawnMoveLeft() - leaving it here incase RightPawn movement can do more
 void ALinkedPlayerController::RightPawnMoveLeft()
 {
-	if (RightPawn)
+	if (!RightPawn || !LeftPawn)
 	{
-		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceLeft)
-		{
-			RightPawn->Turn(EFaceDirection::FaceLeft);
-		}
-		else
-		{
-
-			RightPawn->Move(EMoveDirection::Left);
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn left because eitehr RightPawn OR LeftPawn is invalid!"));
+		return;
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn left!"));
+		//If we are currently linked then boths pawns will move left (if they can)
+		if (RightPawn->LinkedStatus())
+		{
+			if (IsFacingSameDirection(EFaceDirection::FaceLeft))
+			{
+				if (CanBothMoveInDirection(EMoveDirection::Left))
+				{
+					MoveBothInDirection(EMoveDirection::Left);
+				}
+			}
+			else
+			{
+				TurnSameDirection(EFaceDirection::FaceLeft);
+			}
+		}
+		else
+		{
+			//The pawns aren't linked - so we are moving just the left pawn to the left
+			if (RightPawn->IsFacingDirection(EFaceDirection::FaceLeft) && RightPawn->CanMoveLeft())
+			{
+				RightPawn->Move(EMoveDirection::Left);
+			}
+			else
+			{
+				RightPawn->Turn(EFaceDirection::FaceLeft);
+			}
+		}
 	}
 }
 
+//Could just use LeftPawnMoveRight() - leaving it here incase RightPawn movement can do more
 void ALinkedPlayerController::RightPawnMoveRight()
 {
-	if (RightPawn)
+	if (!RightPawn || !LeftPawn)
 	{
-		if (RightPawn->GetCurrentFaceDirection() != EFaceDirection::FaceRight)
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn right because either RightPawn OR LeftPawn is invalid!"));
+		return;
+	}
+	else
+	{
+		//If we are currently linked then boths pawns will move left (if they can)
+		if (RightPawn->LinkedStatus())
 		{
-			RightPawn->Turn(EFaceDirection::FaceRight);
+			if (IsFacingSameDirection(EFaceDirection::FaceRight))
+			{
+				if (CanBothMoveInDirection(EMoveDirection::Right))
+				{
+					MoveBothInDirection(EMoveDirection::Right);
+				}
+			}
+			else
+			{
+				TurnSameDirection(EFaceDirection::FaceRight);
+			}
 		}
 		else
 		{
-			RightPawn->Move(EMoveDirection::Right);
+			//The pawns aren't linked - so we are moving just the left pawn to the left
+			if (RightPawn->IsFacingDirection(EFaceDirection::FaceRight) && RightPawn->CanMoveRight())
+			{
+				RightPawn->Move(EMoveDirection::Right);
+			}
+			else
+			{
+				RightPawn->Turn(EFaceDirection::FaceRight);
+			}
 		}
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to move RightPawn right!"));
-	}
 }
-bool ALinkedPlayerController::IsFacingSameDirection(EFaceDirection FaceDirection)
-{
-	if (LeftPawn->IsFacingDirection(FaceDirection) && RightPawn->IsFacingDirection(FaceDirection))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-void ALinkedPlayerController::TurnSameDirection(EFaceDirection FaceDirection)
-{
-	LeftPawn->Turn(FaceDirection);
-	RightPawn->Turn(FaceDirection);
-}
-bool ALinkedPlayerController::CanBothMoveInDirection(EMoveDirection MoveDirection)
-{
-	if (LeftPawn->CanMoveInDirection(MoveDirection) && RightPawn->CanMoveInDirection(MoveDirection))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-void ALinkedPlayerController::MoveBothInDirection(EMoveDirection MoveDirection)
-{
-	LeftPawn->Move(MoveDirection);
-	RightPawn->Move(MoveDirection);
-}
-/*
+
 bool ALinkedPlayerController::IsFacingSameDirection(EFaceDirection FaceDirection)
 {
 	if (LeftPawn->IsFacingDirection(FaceDirection) && RightPawn->IsFacingDirection(FaceDirection))
@@ -346,7 +377,6 @@ void ALinkedPlayerController::MoveBothInDirection(EMoveDirection MoveDirection)
 	LeftPawn->Move(MoveDirection);
 	RightPawn->Move(MoveDirection);
 }
-*/
 
 void ALinkedPlayerController::Interact()
 {

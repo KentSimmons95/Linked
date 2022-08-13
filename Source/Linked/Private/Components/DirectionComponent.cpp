@@ -2,6 +2,7 @@
 
 
 #include "Components/DirectionComponent.h"
+#include "Player/LinkedPlayerPawn.h"
 
 // Sets default values for this component's properties
 UDirectionComponent::UDirectionComponent()
@@ -16,32 +17,45 @@ void UDirectionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	//Get the Owning Actor of this component
-	ActorOwner = this->GetOwner();
+	PawnOwner = Cast<ALinkedPlayerPawn>(this->GetOwner());
+	
+	//Assert if the Cast was success
+	checkf(PawnOwner, TEXT("Failed to Cast AActor to ALinkedPlayerPawn in DirectionComponent for %s"), *this->GetOwner()->GetActorNameOrLabel());
 }
 
 void UDirectionComponent::RotateActor(EFaceDirection Direction)
 {
-	switch (Direction)
+	//If   - the PawnOwner is still moving then early return
+	//Else - rotate the PawnOwner
+	if (PawnOwner->IsPawnMoving())
 	{
-	case EFaceDirection::FaceUp:
-		FaceUp();
-		break;
-
-	case EFaceDirection::FaceDown:
-		FaceDown();
-		break;
-
-	case EFaceDirection::FaceLeft:
-		FaceLeft();
-		break;
-
-	case EFaceDirection::FaceRight:
-		FaceRight();
-		break;
-
-	default:
-		break;
+		return;
 	}
+	else
+	{
+		switch (Direction)
+		{
+		case EFaceDirection::FaceUp:
+			FaceUp();
+			break;
+
+		case EFaceDirection::FaceDown:
+			FaceDown();
+			break;
+
+		case EFaceDirection::FaceLeft:
+			FaceLeft();
+			break;
+
+		case EFaceDirection::FaceRight:
+			FaceRight();
+			break;
+
+		default:
+			break;
+		}
+	}
+	
 }
 
 EFaceDirection UDirectionComponent::GetCurrentFaceDirection()
@@ -53,7 +67,7 @@ void UDirectionComponent::FaceUp()
 {
 	if (CurrentFacingDirection != EFaceDirection::FaceUp)
 	{
-		ActorOwner->SetActorRotation(TurnUp);
+		PawnOwner->SetActorRotation(TurnUp);
 		CurrentFacingDirection = EFaceDirection::FaceUp;
 	}
 }
@@ -62,7 +76,7 @@ void UDirectionComponent::FaceDown()
 {
 	if (CurrentFacingDirection != EFaceDirection::FaceDown)
 	{
-		ActorOwner->SetActorRotation(TurnDown);
+		PawnOwner->SetActorRotation(TurnDown);
 		CurrentFacingDirection = EFaceDirection::FaceDown;
 	}
 }
@@ -71,7 +85,7 @@ void UDirectionComponent::FaceLeft()
 {
 	if (CurrentFacingDirection != EFaceDirection::FaceLeft)
 	{
-		ActorOwner->SetActorRotation(TurnLeft);
+		PawnOwner->SetActorRotation(TurnLeft);
 		CurrentFacingDirection = EFaceDirection::FaceLeft;
 	}
 }
@@ -80,7 +94,7 @@ void UDirectionComponent::FaceRight()
 {
 	if (CurrentFacingDirection != EFaceDirection::FaceRight)
 	{
-		ActorOwner->SetActorRotation(TurnRight);
+		PawnOwner->SetActorRotation(TurnRight);
 		CurrentFacingDirection = EFaceDirection::FaceRight;
 	}
 }

@@ -78,6 +78,11 @@ bool UTileMovementComponent::HasMoveCompleted()
 	return !IsMoving;
 }
 
+bool UTileMovementComponent::IsCurrentlyMoving()
+{
+	return IsMoving;
+}
+
 bool UTileMovementComponent::CanMoveUp() const
 {
 	//Check up tile

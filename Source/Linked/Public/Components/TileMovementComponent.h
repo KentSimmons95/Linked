@@ -63,6 +63,9 @@ public:
 	//Check if we have completed the move
 	bool HasMoveCompleted();
 
+	//Returns if the owning actor is currently moving or not
+	bool IsCurrentlyMoving();
+
 	//Checks each direction that the actor can move in
 	bool CanMoveUp()    const;
 	bool CanMoveDown()  const;

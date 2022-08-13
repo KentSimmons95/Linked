@@ -40,7 +40,7 @@ public:
 
 private:
 
-	AActor* ActorOwner = nullptr;
+	class ALinkedPlayerPawn* PawnOwner = nullptr;
 
 	//Set the default direction to FaceUp
 	EFaceDirection CurrentFacingDirection = EFaceDirection::FaceUp;
