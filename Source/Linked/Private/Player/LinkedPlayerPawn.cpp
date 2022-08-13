@@ -165,3 +165,16 @@ void ALinkedPlayerPawn::UpdateLink()
 		}
 	}
 }
+
+void ALinkedPlayerPawn::SetActorStartLocation()
+{
+	if (TileMovementComponent->GetActorStartTile() != nullptr)
+	{
+		ATile* StartTile = TileMovementComponent->GetActorStartTile();
+		this->SetActorLocation(StartTile->GetActorLocation()) ;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Starting tile not set on the TileMovementComponent for Actor: %s"), *this->GetActorNameOrLabel());
+	}
+}

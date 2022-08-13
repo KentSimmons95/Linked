@@ -212,6 +212,19 @@ void UTileMovementComponent::MoveToTile(EMoveDirection Direction)
 	}
 }
 
+ATile* UTileMovementComponent::GetActorStartTile() const
+{
+	if (!ActorStartTile)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Starting tile not set for this actor!"));
+		return nullptr;
+	}
+	else
+	{
+		return ActorStartTile;
+	}
+}
+
 
 
 void UTileMovementComponent::MoveUp()

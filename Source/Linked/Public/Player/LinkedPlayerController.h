@@ -51,7 +51,6 @@ private:
 	void RightPawnMoveLeft();
 	void RightPawnMoveRight();
 
-	
 	//Check if the Left and Right pawn are facing the same direction
 	bool IsFacingSameDirection(EFaceDirection FaceDirection);
 	//Make the Left and Right pawn face the same direction

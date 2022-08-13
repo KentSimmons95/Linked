@@ -75,6 +75,8 @@ public:
 	//Moves the actor to the chosen tile
 	void MoveToTile(EMoveDirection Direction);
 
+	//Returns the starting tile that is assigned to the actor
+	ATile* GetActorStartTile() const;
 private:
 
 	/**** Timeline properties ****/

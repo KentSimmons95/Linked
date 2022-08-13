@@ -84,4 +84,8 @@ private:
 
 	//Update the link - using the TileMovementComponent and LinkComponent
 	void UpdateLink();
+
+	//Function to be called in the editor to move the pawn to its starting tile
+	UFUNCTION(CallInEditor, Category = "Setup")
+	void SetActorStartLocation();
 };
