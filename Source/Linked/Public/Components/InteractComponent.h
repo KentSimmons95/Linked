@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Interfaces/InteractInterface.h"
 #include "InteractComponent.generated.h"
 
 class ALinkedPlayerPawn;
 
+//Interact Component that inherits from the InteractInterface class as well
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class LINKED_API UInteractComponent : public UActorComponent
+class LINKED_API UInteractComponent : public UActorComponent, public IInteractInterface
 {
 	GENERATED_BODY()
 
@@ -24,6 +26,10 @@ protected:
 public:	
 
 	void Interact();
+
+	//TODO - Implement or remove interface?
+	//Overriden Interact method from the InteractInterface
+	virtual void InteractWithObject() override;
 
 private:
 	//Length of the line trace is the size of the game tile

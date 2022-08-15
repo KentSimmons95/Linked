@@ -62,6 +62,10 @@ public:
 
 	bool CanMoveInDirection(EMoveDirection MoveDirection) const;
 
+	//TESTING
+	void ScanPush();
+	void ScanPull();
+
 private:
 	UGameplayStatics* GameplayStatics;
 	ALinkedPlayerController* PlayerController;
@@ -88,4 +92,10 @@ private:
 	//Function to be called in the editor to move the pawn to its starting tile
 	UFUNCTION(CallInEditor, Category = "Setup")
 	void SetActorStartLocation();
+
+	//Returns the tile that the pawn is currently facing towards
+	ATile* GetTileInDirection(EFaceDirection& OutDirection);
+
+	//Get the MoveDirection to push a block using the FaceDirection
+	EMoveDirection DeterminePushDirection(EFaceDirection FaceDirection);
 };

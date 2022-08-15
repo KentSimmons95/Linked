@@ -29,6 +29,11 @@ void UInteractComponent::Interact()
 	LineTrace();
 }
 
+void UInteractComponent::InteractWithObject()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Interact method called from InteractComponent!"));
+}
+
 void UInteractComponent::LineTrace()
 {
 	bool bHit = false;

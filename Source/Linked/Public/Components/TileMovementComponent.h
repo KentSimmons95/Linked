@@ -65,12 +65,9 @@ public:
 
 	//Returns if the owning actor is currently moving or not
 	bool IsCurrentlyMoving();
-
-	//Checks each direction that the actor can move in
-	bool CanMoveUp()    const;
-	bool CanMoveDown()  const;
-	bool CanMoveLeft()  const;
-	bool CanMoveRight() const;
+	
+	//Check if the direction to move in is possible
+	bool CanMoveInDirection(EMoveDirection Direction);
 
 	//Moves the actor to the chosen tile
 	void MoveToTile(EMoveDirection Direction);
@@ -99,6 +96,12 @@ private:
 	void MoveDown();
 	void MoveLeft();
 	void MoveRight();
+
+	//Movement direction checking
+	bool CanMoveUp()    const;
+	bool CanMoveDown()  const;
+	bool CanMoveLeft()  const;
+	bool CanMoveRight() const;
 
 	FTileNeighbours CurrentTileNeighbours;
 

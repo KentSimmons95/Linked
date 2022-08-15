@@ -33,6 +33,30 @@ void ATile::SetTileCoords(uint32 XValue, int32 YValue)
 	TileCoord.Y = YValue;
 }
 
+bool ATile::HasActorOnTile() const
+{
+	return bHasActorOnTile;
+}
+
+void ATile::UpdateActorOnTile(AActor* Actor)
+{
+	if (Actor == nullptr)
+	{
+		ActorOnTile = nullptr;
+		bHasActorOnTile = false;
+	}
+	else
+	{
+		ActorOnTile = Actor;
+		bHasActorOnTile = true;
+	}
+}
+
+AActor* ATile::GetActorOnTile() const
+{
+	return ActorOnTile;
+}
+
 void ATile::AddUpNeighbour(ATile* UpNeighbour)
 {
 	TileNeighbours.UpNeighbour = UpNeighbour;

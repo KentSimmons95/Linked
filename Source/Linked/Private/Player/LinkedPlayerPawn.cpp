@@ -2,6 +2,7 @@
 
 
 #include "Player/LinkedPlayerPawn.h"
+#include "Actors/Block.h"
 #include "Player/LinkedPlayerController.h"
 
 // Sets default values
@@ -94,22 +95,22 @@ bool ALinkedPlayerPawn::LinkedStatus()
 
 bool ALinkedPlayerPawn::CanMoveUp() const
 {
-	return TileMovementComponent->CanMoveUp();
+	return TileMovementComponent->CanMoveInDirection(EMoveDirection::Up);
 }
 
 bool ALinkedPlayerPawn::CanMoveDown() const
 {
-	return TileMovementComponent->CanMoveDown();
+	return TileMovementComponent->CanMoveInDirection(EMoveDirection::Down);
 }
 
 bool ALinkedPlayerPawn::CanMoveLeft() const
 {
-	return TileMovementComponent->CanMoveLeft();
+	return TileMovementComponent->CanMoveInDirection(EMoveDirection::Left);
 }
 
 bool ALinkedPlayerPawn::CanMoveRight() const
 {
-	return TileMovementComponent->CanMoveRight();
+	return TileMovementComponent->CanMoveInDirection(EMoveDirection::Right);
 }
 
 bool ALinkedPlayerPawn::CanMoveInDirection(EMoveDirection MoveDirection) const
@@ -132,6 +133,56 @@ bool ALinkedPlayerPawn::CanMoveInDirection(EMoveDirection MoveDirection) const
 		UE_LOG(LogTemp, Warning, TEXT("Failed to find a valid move direction for Pawn: %s!"), *this->GetActorNameOrLabel());
 		return false;
 	}
+}
+
+void ALinkedPlayerPawn::ScanPush()
+{
+	EFaceDirection FaceDirection;
+	ATile* Tile = GetTileInDirection(FaceDirection);
+
+	EMoveDirection BlockMoveDirection = DeterminePushDirection(FaceDirection);
+	if (Tile)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Valid tile"));
+		AActor* ActorOnTile = Tile->GetActorOnTile();
+
+		//Early return if there is no actor on the tile
+		if (!ActorOnTile)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No Actor on tile!"));
+			return;
+		}
+
+		if (ActorOnTile->IsA(ABlock::StaticClass()))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("The actor on tile is a ABlock!"));
+			ABlock* Block = Cast<ABlock>(ActorOnTile);
+
+			//If block can move then move
+			//Else do nothing
+			if (Block->CanMoveInDirection(BlockMoveDirection))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Block can move in that direction!"));
+				Block->MoveInDirection(BlockMoveDirection);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Block cannot move in that direction!"));
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No block actor on tile"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Invalid tile"));
+	}
+}
+
+void ALinkedPlayerPawn::ScanPull()
+{
 }
 
 bool ALinkedPlayerPawn::IsFacingDirection(EFaceDirection Direction)
@@ -177,4 +228,60 @@ void ALinkedPlayerPawn::SetActorStartLocation()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Starting tile not set on the TileMovementComponent for Actor: %s"), *this->GetActorNameOrLabel());
 	}
+}
+
+ATile* ALinkedPlayerPawn::GetTileInDirection(EFaceDirection& OutDirection)
+{
+	//Get current tile we are on
+	ATile* CurrentTile = TileMovementComponent->GetCurrentTile();
+	ATile* FacingTile = nullptr;
+
+	//Determine which direction the pawn is facing
+	EFaceDirection CurrentFacingDirection = DirectionComponent->GetCurrentFaceDirection();
+	OutDirection = CurrentFacingDirection;
+
+	//Calculate the neighbouring tile in the direction we are facing
+	switch (CurrentFacingDirection)
+	{
+	case EFaceDirection::FaceUp:
+		FacingTile = CurrentTile->GetTileNeighbours().UpNeighbour;
+		break;
+	case EFaceDirection::FaceDown:
+		FacingTile = CurrentTile->GetTileNeighbours().DownNeighbour;
+		break;
+	case EFaceDirection::FaceLeft:
+		FacingTile = CurrentTile->GetTileNeighbours().LeftNeighbour;
+		break;
+	case EFaceDirection::FaceRight:
+		FacingTile = CurrentTile->GetTileNeighbours().RightNeighbour;
+		break;
+	default:
+		UE_LOG(LogTemp, Warning, TEXT("Failed to determine the direction we are facing"));
+		break;
+	}
+	return FacingTile;
+}
+
+EMoveDirection ALinkedPlayerPawn::DeterminePushDirection(EFaceDirection FaceDirection)
+{
+	EMoveDirection MoveDirection;
+	switch (FaceDirection)
+	{
+	case EFaceDirection::FaceUp:
+		MoveDirection = EMoveDirection::Up;
+		break;
+	case EFaceDirection::FaceDown:
+		MoveDirection = EMoveDirection::Down;
+		break;
+	case EFaceDirection::FaceLeft:
+		MoveDirection = EMoveDirection::Left;
+		break;
+	case EFaceDirection::FaceRight:
+		MoveDirection = EMoveDirection::Right;
+		break;
+	default:
+		UE_LOG(LogTemp, Warning, TEXT("Failed to determine the direction to move in!"));
+		break;
+	}
+	return MoveDirection;
 }

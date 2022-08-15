@@ -55,6 +55,11 @@ public:
 	//YValue translates to the Height position in the tileset
 	void SetTileCoords(uint32 XValue, int32 YValue);
 
+	bool HasActorOnTile() const;
+	//If no actor is on tile - pass in nullptr
+	void UpdateActorOnTile(AActor* Actor);
+	AActor* GetActorOnTile() const;
+
 	FTileNeighbours GetTileNeighbours() const;
 		 
 	uint32 GetXCoord();
@@ -68,6 +73,11 @@ private:
 	FTileCoordinate TileCoord;
 	UPROPERTY(VisibleAnywhere, Category = "Neighbours")
 	FTileNeighbours TileNeighbours;
+
+	UPROPERTY(VisibleAnywhere, Category = "On this Tile")
+	AActor* ActorOnTile = nullptr;
+	UPROPERTY(VisibleAnywhere, Category = "On this Tile")
+	bool bHasActorOnTile = false;
 
 	void AddUpNeighbour(ATile* UpNeighbour);
 	void AddDownNeighbour(ATile* DownNeighbour);

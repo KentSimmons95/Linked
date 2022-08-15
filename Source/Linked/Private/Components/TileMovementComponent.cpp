@@ -85,8 +85,11 @@ bool UTileMovementComponent::IsCurrentlyMoving()
 
 bool UTileMovementComponent::CanMoveUp() const
 {
+	//Readability
+	ATile* UpNeightbour = CurrentTileNeighbours.UpNeighbour;
+
 	//Check up tile
-	if (CurrentTileNeighbours.UpNeighbour == nullptr)
+	if (UpNeightbour == nullptr || UpNeightbour->HasActorOnTile())
 	{
 		return false;
 	}
@@ -98,8 +101,11 @@ bool UTileMovementComponent::CanMoveUp() const
 
 bool UTileMovementComponent::CanMoveDown() const
 {
+	//Readability
+	ATile* DownNeighbour = CurrentTileNeighbours.DownNeighbour;
+
 	//Check down tile
-	if (CurrentTileNeighbours.DownNeighbour == nullptr)
+	if (DownNeighbour == nullptr || DownNeighbour->HasActorOnTile())
 	{
 		return false;
 	}
@@ -111,8 +117,11 @@ bool UTileMovementComponent::CanMoveDown() const
 
 bool UTileMovementComponent::CanMoveLeft() const
 {
+	//Readability
+	ATile* LeftNeighbour = CurrentTileNeighbours.LeftNeighbour;
+
 	//Check left tile
-	if (CurrentTileNeighbours.LeftNeighbour == nullptr)
+	if (LeftNeighbour == nullptr || LeftNeighbour->HasActorOnTile())
 	{
 		return false;
 	}
@@ -124,8 +133,11 @@ bool UTileMovementComponent::CanMoveLeft() const
 
 bool UTileMovementComponent::CanMoveRight() const
 {
+	//Readability
+	ATile* RightNeighbour = CurrentTileNeighbours.RightNeighbour;
+
 	//Check right tile
-	if (CurrentTileNeighbours.RightNeighbour == nullptr)
+	if (RightNeighbour == nullptr || RightNeighbour->HasActorOnTile())
 	{
 		return false;
 	}
@@ -133,6 +145,32 @@ bool UTileMovementComponent::CanMoveRight() const
 	{
 		return true;
 	}
+}
+
+bool UTileMovementComponent::CanMoveInDirection(EMoveDirection Direction)
+{
+	bool CanMove = false;
+
+	switch (Direction)
+	{
+	case EMoveDirection::Up:
+		CanMove = CanMoveUp();
+		break;
+	case EMoveDirection::Down:
+		CanMove = CanMoveDown();
+		break;
+	case EMoveDirection::Left:
+		CanMove = CanMoveLeft();
+		break;
+	case EMoveDirection::Right:
+		CanMove = CanMoveRight();
+		break;
+	default:
+		UE_LOG(LogTemp, Warning, TEXT("Invalid move direction detected!"));
+		break;
+	}
+
+	return CanMove;
 }
 
 void UTileMovementComponent::CheckVariables()
@@ -144,6 +182,7 @@ void UTileMovementComponent::CheckVariables()
 		return;
 	}
 	CurrentTile = ActorStartTile;
+	CurrentTile->UpdateActorOnTile(ActorOwner);
 	
 	//Check to see if we have a Curve Float inserted in the editor
 	if (!CurveFloat)
@@ -178,9 +217,16 @@ void UTileMovementComponent::UpdateActorInformation()
 	UE_LOG(LogTemp, Warning, TEXT("OnMoveCompleted"));
 
 	IsMoving = false;
+	
+	//CurrentTile before it gets assigned to TileMovedTo (Tile moved from)
+	CurrentTile->UpdateActorOnTile(nullptr);
 
 	CurrentTile = TileMovedTo;
+
+	//CurrentTile is now the current tile we are standing on (Tile moved to)
+	CurrentTile->UpdateActorOnTile(ActorOwner);
 	TileMovedTo = nullptr;
+
 	SetCurrentTile(CurrentTile);
 	UpdateTileNeighbours();
 

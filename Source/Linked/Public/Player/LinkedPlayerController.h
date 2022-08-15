@@ -45,11 +45,13 @@ private:
 	void LeftPawnMoveLeft();
 	void LeftPawnMoveRight();
 
-	//TODO - Implement right pawn move logic
 	void RightPawnMoveUp();
 	void RightPawnMoveDown();
 	void RightPawnMoveLeft();
 	void RightPawnMoveRight();
+
+	void LeftPawnPush();
+	void RightPawnPull();
 
 	//Check if the Left and Right pawn are facing the same direction
 	bool IsFacingSameDirection(EFaceDirection FaceDirection);

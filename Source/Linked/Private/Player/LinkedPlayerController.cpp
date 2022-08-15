@@ -51,6 +51,8 @@ void ALinkedPlayerController::SetupInput()
 
 	//Add interact bindings
 	InputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Interact);
+	InputComponent->BindAction("LeftPawnPush", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::LeftPawnPush);
+	InputComponent->BindAction("RightPawnPull", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::RightPawnPull);
 }
 
 
@@ -340,6 +342,30 @@ void ALinkedPlayerController::RightPawnMoveRight()
 			}
 		}
 	}
+}
+
+void ALinkedPlayerController::LeftPawnPush()
+{
+	/*Test if there is a block in front of the left pawn
+	 *If there is then push the block 1 tile away from the left pawn
+	 */
+	if (LeftPawn->LinkedStatus())
+	{
+		LeftPawn->ScanPush();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We cant move the block because we arent linked!"));
+	}
+}
+
+void ALinkedPlayerController::RightPawnPull()
+{
+	/*If there is an empty tile followed by a block 
+	 *actor immediately after the right pawn
+	 *then pull the block onto the empty tile space
+	*/
+
 }
 
 bool ALinkedPlayerController::IsFacingSameDirection(EFaceDirection FaceDirection)
