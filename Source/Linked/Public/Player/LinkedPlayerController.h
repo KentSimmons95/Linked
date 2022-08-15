@@ -50,8 +50,10 @@ private:
 	void RightPawnMoveLeft();
 	void RightPawnMoveRight();
 
-	void LeftPawnPush();
-	void RightPawnPull();
+	//Default set to LeftPawn Push
+	void PawnPush();
+	//Default set to RightPawn Pull
+	void PawnPull();
 
 	//Check if the Left and Right pawn are facing the same direction
 	bool IsFacingSameDirection(EFaceDirection FaceDirection);
@@ -61,7 +63,5 @@ private:
 	bool CanBothMoveInDirection(EMoveDirection MoveDirection);
 	//Move Left and Right pawn in the specified direction - only use once you know they can both move in the specified direction
 	void MoveBothInDirection(EMoveDirection MoveDirection);
-	
 
-	void Interact();
 };

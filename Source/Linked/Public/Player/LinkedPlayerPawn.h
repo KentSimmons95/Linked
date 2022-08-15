@@ -49,7 +49,9 @@ public:
 	//Calls the TileMovementComponent that is attached to the Pawn to move tile
 	void Move(EMoveDirection Direction);
 	void Turn(EFaceDirection Direction);
-	void Interact();
+
+	void PushBlock();
+	void PullBlock();
 
 	//The current link status of the Pawn
 	bool LinkedStatus();
@@ -62,9 +64,7 @@ public:
 
 	bool CanMoveInDirection(EMoveDirection MoveDirection) const;
 
-	//TESTING
-	void ScanPush();
-	void ScanPull();
+	ATile* GetCurrentTile() const;
 
 private:
 	UGameplayStatics* GameplayStatics;

@@ -50,9 +50,8 @@ void ALinkedPlayerController::SetupInput()
 	InputComponent->BindAction("RightPawnRight", EInputEvent::IE_Released, this, &ALinkedPlayerController::RightPawnMoveRight);
 
 	//Add interact bindings
-	InputComponent->BindAction("Interact", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::Interact);
-	InputComponent->BindAction("LeftPawnPush", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::LeftPawnPush);
-	InputComponent->BindAction("RightPawnPull", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::RightPawnPull);
+	InputComponent->BindAction("PawnPush", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::PawnPush);
+	InputComponent->BindAction("PawnPull", EInputEvent::IE_Pressed, this, &ALinkedPlayerController::PawnPull);
 }
 
 
@@ -344,28 +343,38 @@ void ALinkedPlayerController::RightPawnMoveRight()
 	}
 }
 
-void ALinkedPlayerController::LeftPawnPush()
+void ALinkedPlayerController::PawnPush()
 {
 	/*Test if there is a block in front of the left pawn
 	 *If there is then push the block 1 tile away from the left pawn
 	 */
 	if (LeftPawn->LinkedStatus())
 	{
-		LeftPawn->ScanPush();
+		LeftPawn->PushBlock();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("We cant move the block because we arent linked!"));
+		UE_LOG(LogTemp, Warning, TEXT("We cant push the block because we arent linked!"));
 	}
 }
 
-void ALinkedPlayerController::RightPawnPull()
+void ALinkedPlayerController::PawnPull()
 {
 	/*If there is an empty tile followed by a block 
 	 *actor immediately after the right pawn
 	 *then pull the block onto the empty tile space
 	*/
+	UE_LOG(LogTemp, Warning, TEXT("Trying to pull!"));
 
+	if (RightPawn->LinkedStatus())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We are linked!"));
+		RightPawn->PullBlock();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("We cant pull the block because we arent linked!"));
+	}
 }
 
 bool ALinkedPlayerController::IsFacingSameDirection(EFaceDirection FaceDirection)
@@ -404,12 +413,4 @@ void ALinkedPlayerController::MoveBothInDirection(EMoveDirection MoveDirection)
 	RightPawn->Move(MoveDirection);
 }
 
-void ALinkedPlayerController::Interact()
-{
-	if (LeftPawn)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Interact button pressed!"));
-		LeftPawn->Interact();
-	}
-}
 

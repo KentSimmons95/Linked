@@ -34,6 +34,4 @@ private:
 	UStaticMeshComponent* StaticMeshComponent;
 	UPROPERTY(EditAnywhere)
 	UTileMovementComponent* TileMovementComponent;
-	UPROPERTY(EditAnywhere)
-	UInteractComponent* InteractComponent;
 };

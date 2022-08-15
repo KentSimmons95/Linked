@@ -4,14 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "Interfaces/InteractInterface.h"
 #include "InteractComponent.generated.h"
 
+//Forward Declaration
+enum EFaceDirection;
+enum EMoveDirection;
+class ATile;
 class ALinkedPlayerPawn;
 
-//Interact Component that inherits from the InteractInterface class as well
+//Interact Component that has the ability to interact with world actors such as blocks
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class LINKED_API UInteractComponent : public UActorComponent, public IInteractInterface
+class LINKED_API UInteractComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
@@ -24,30 +27,21 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-
-	void Interact();
-
-	//TODO - Implement or remove interface?
-	//Overriden Interact method from the InteractInterface
-	virtual void InteractWithObject() override;
-
+	
+	//Temp for refactor - rename
+	void TryPushBlock();
+	void TryPullBlock();
+	
 private:
-	//Length of the line trace is the size of the game tile
-	float LineTraceLength = 100.0f;
+	ALinkedPlayerPawn* PawnOwner = nullptr;
 
-	const float Right = 90.0f;
+	//Returns the tile that the pawn is currently facing towards
+	ATile* GetTileInDirection(EFaceDirection& OutDirection);
+	//Returns the second tile the pawn is currently facing towards (skips the first tile)
+	ATile* GetSecondTileInDirection(EFaceDirection& OutDirection);
+	//Get the MoveDirection to push a block using the Pawns FaceDirection
+	EMoveDirection DeterminePushDirection(EFaceDirection FaceDirection);
+	//Get the MoveDirection to pull a block using the Pawns FaceDirection
+	EMoveDirection DeterminePullDirection(EFaceDirection FaceDirection);
 
-	FVector CurrentLocation;
-	FRotator CurrentRotation;
-
-	//Actor Parent is ALinkedPlayerPawn - only Player Pawns will have the ability to line trace
-	ALinkedPlayerPawn* ActorOwner;
-	AActor* TargetHit;
-
-	//Line Trace that shoots in the direction the actor is currently facing
-	void LineTrace();
-	//Calculate the end location for the linetrace when fired
-	FVector CalculateEndLocation();
-
-	AActor* ActorHit();
 };

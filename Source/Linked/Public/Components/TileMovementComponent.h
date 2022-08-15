@@ -32,7 +32,8 @@ enum EMoveDirection
 	Up		 UMETA(DisplayName = "Up"),
 	Down	 UMETA(DisplayName = "Down"),
 	Left	 UMETA(DisplayName = "Left"),
-	Right	 UMETA(DisplayName = "Right")
+	Right	 UMETA(DisplayName = "Right"),
+	None	 UMETA(DisplayName = "None")
 };
 
 // Actor Component that allows the owning actor to move on the Tile System

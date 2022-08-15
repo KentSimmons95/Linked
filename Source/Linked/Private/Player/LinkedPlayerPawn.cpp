@@ -83,9 +83,14 @@ void ALinkedPlayerPawn::Turn(EFaceDirection Direction)
 	DirectionComponent->RotateActor(Direction);
 }
 
-void ALinkedPlayerPawn::Interact()
+void ALinkedPlayerPawn::PushBlock()
 {
-	InteractComponent->Interact();
+	InteractComponent->TryPushBlock();
+}
+
+void ALinkedPlayerPawn::PullBlock()
+{
+	InteractComponent->TryPullBlock();
 }
 
 bool ALinkedPlayerPawn::LinkedStatus()
@@ -135,54 +140,9 @@ bool ALinkedPlayerPawn::CanMoveInDirection(EMoveDirection MoveDirection) const
 	}
 }
 
-void ALinkedPlayerPawn::ScanPush()
+ATile* ALinkedPlayerPawn::GetCurrentTile() const
 {
-	EFaceDirection FaceDirection;
-	ATile* Tile = GetTileInDirection(FaceDirection);
-
-	EMoveDirection BlockMoveDirection = DeterminePushDirection(FaceDirection);
-	if (Tile)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Valid tile"));
-		AActor* ActorOnTile = Tile->GetActorOnTile();
-
-		//Early return if there is no actor on the tile
-		if (!ActorOnTile)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("No Actor on tile!"));
-			return;
-		}
-
-		if (ActorOnTile->IsA(ABlock::StaticClass()))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("The actor on tile is a ABlock!"));
-			ABlock* Block = Cast<ABlock>(ActorOnTile);
-
-			//If block can move then move
-			//Else do nothing
-			if (Block->CanMoveInDirection(BlockMoveDirection))
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Block can move in that direction!"));
-				Block->MoveInDirection(BlockMoveDirection);
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Block cannot move in that direction!"));
-			}
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("No block actor on tile"));
-		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Invalid tile"));
-	}
-}
-
-void ALinkedPlayerPawn::ScanPull()
-{
+	return TileMovementComponent->GetCurrentTile();
 }
 
 bool ALinkedPlayerPawn::IsFacingDirection(EFaceDirection Direction)
