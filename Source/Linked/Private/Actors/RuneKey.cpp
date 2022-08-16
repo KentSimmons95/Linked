@@ -2,6 +2,8 @@
 
 
 #include "Actors/RuneKey.h"
+#include "Actors/RuneExit.h"
+#include "Player/LinkedPlayerPawn.h"
 #include "Actors/Tile.h"
 
 // Sets default values
@@ -19,7 +21,7 @@ ARuneKey::ARuneKey()
 	OverlapBox = CreateDefaultSubobject<UBoxComponent>(TEXT("OverlapBox"));
 	OverlapBox->SetWorldScale3D(FVector(1.0f, 1.0f, 1.0f));
 	OverlapBox->SetGenerateOverlapEvents(true);
-	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARuneKey::OnPlayerEnterPickupBox);
+	OverlapBox->OnComponentBeginOverlap.AddDynamic(this, &ARuneKey::OnPlayerEnterOverlapBox);
 	OverlapBox->AttachToComponent(PickupRoot, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 }
 
@@ -35,6 +37,11 @@ void ARuneKey::BeginPlay()
 	else
 	{
 		this->SetActorLocation(StartLocation->GetActorLocation());
+	}
+
+	if (!RuneExit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No RuneExit is associated with: %s"), *this->GetActorNameOrLabel());
 	}
 }
 
@@ -57,10 +64,22 @@ void ARuneKey::MoveToTileLocation()
 	}
 }
 
-void ARuneKey::OnPlayerEnterPickupBox(UPrimitiveComponent* OverlappedActor, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ARuneKey::OnPlayerEnterOverlapBox(UPrimitiveComponent* OverlappedActor, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapped"));
-	Destroy();
-	//Trigger something to GameMode to enable door to open
+	if (!RuneExit)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No RuneExit is associated with: %s"), *this->GetActorNameOrLabel());
+		return;
+	}
+
+	if (OtherActor->IsA(ALinkedPlayerPawn::StaticClass()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Overlapped with: %s"), *this->GetActorNameOrLabel());
+		UE_LOG(LogTemp, Warning, TEXT("%s is now unlocked"), *RuneExit->GetActorNameOrLabel());
+
+		//Tell the RuneExit we have collected the key and then destroy the key actor
+		RuneExit->KeyCollected();
+		Destroy();
+	}
 }
 
