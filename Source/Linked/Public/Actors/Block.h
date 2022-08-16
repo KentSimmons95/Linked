@@ -34,4 +34,8 @@ private:
 	UStaticMeshComponent* StaticMeshComponent;
 	UPROPERTY(EditAnywhere)
 	UTileMovementComponent* TileMovementComponent;
+
+	//Moves the Block Actor to the start location 
+	UFUNCTION(CallInEditor, Category = "Actor Location")
+	void MoveToTileLocation();
 };

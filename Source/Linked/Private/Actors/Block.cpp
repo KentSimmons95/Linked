@@ -28,4 +28,18 @@ void ABlock::MoveInDirection(EMoveDirection Direction)
 	TileMovementComponent->MoveToTile(Direction);
 }
 
+void ABlock::MoveToTileLocation()
+{
+	ATile* StartTileLocation = TileMovementComponent->GetActorStartTile();
+
+	if (!StartTileLocation)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TileMovementComponent StartTile is empty for Block Actor: %s"), *this->GetActorNameOrLabel());
+	}
+	else
+	{
+		this->SetActorLocation(StartTileLocation->GetActorLocation());
+	}
+}
+
 
