@@ -12,7 +12,7 @@ ALinkedPlayerPawn::ALinkedPlayerPawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CapsuleComponent"));
-	CapsuleComponent->SetCapsuleSize(36.0f, 100.0f);
+	CapsuleComponent->SetCapsuleSize(36.0f, 70.0f);
 	CapsuleComponent->SetGenerateOverlapEvents(true);
 	
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
