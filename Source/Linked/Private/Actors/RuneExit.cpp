@@ -56,13 +56,13 @@ void ARuneExit::BeginPlay()
 	}
 
 	//Check if we have a TileStartLocation so we can use its starting location for this actors location
-	if (!TileStartLocation)
+	if (!StartLocation)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("TileStartLocation is missing for: %s"), *this->GetActorNameOrLabel());
 	}
 	else
 	{
-		this->SetActorLocation(TileStartLocation->GetActorLocation());
+		this->SetActorLocation(StartLocation->GetActorLocation());
 	}
 }
 
@@ -76,6 +76,18 @@ void ARuneExit::KeyCollected()
 bool ARuneExit::IsPawnStandingOnExit() const
 {
 	return bIsPawnStandingOnExit;
+}
+
+void ARuneExit::MoveToTileLocation()
+{
+	if (!StartLocation)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to move RuneKey actor because Start Location is empty!"));
+	}
+	else
+	{
+		this->SetActorLocation(StartLocation->GetActorLocation());
+	}
 }
 
 bool ARuneExit::IsAPlayerPawn(AActor* OtherActor)

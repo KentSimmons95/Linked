@@ -51,8 +51,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	//XValue translates to the Width position in the tileset
-	//YValue translates to the Height position in the tileset
+    /*XValue translates to the Width position in the tileset
+	* YValue translates to the Height position in the tileset
+	*/
 	void SetTileCoords(uint32 XValue, int32 YValue);
 
 	bool HasActorOnTile() const;
@@ -66,6 +67,9 @@ public:
 	uint32 GetYCoord();
 
 private:
+
+	UPROPERTY(EditAnywhere)
+	USceneComponent* SceneRoot;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshComp;
 

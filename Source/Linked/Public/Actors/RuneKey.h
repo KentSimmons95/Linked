@@ -30,23 +30,23 @@ private:
 	USceneComponent* PickupRoot;
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* StaticMeshComponent;
-	UPROPERTY(EditAnywhere, Category = "Actor Location")
+	UPROPERTY(EditAnywhere)
 	UBoxComponent* OverlapBox;
 
-	//Sets the RuneKey location to the specified tile actors location
-	UPROPERTY(EditAnywhere)
-	class ATile* StartLocation = nullptr;
-
 	//Sets the exit that this key will unlock for
-	UPROPERTY(EditAnywhere, Category = "Key Properties")
+	UPROPERTY(EditAnywhere, Category = "Key Settings")
 	class ARuneExit* RuneExit;
 	
+	//Sets the RuneKey location to the specified tile actors location
+	UPROPERTY(EditAnywhere, Category = "Key Settings")
+	class ATile* StartLocation = nullptr;
+
 	//Moves the RuneKey Actor to the start location 
-	UFUNCTION(CallInEditor, Category = "Actor Location")
+	UFUNCTION(CallInEditor, Category = "Key Settings")
 	void MoveToTileLocation();
 
 	UFUNCTION()
-	void OnPlayerEnterOverlapBox(UPrimitiveComponent* OverlappedActor, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnPlayerEnterOverlapBox(UPrimitiveComponent* OverlappedActor, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+								 int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-		
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "TileManager.generated.h"
 
+class ATile;
+
 UCLASS()
 class LINKED_API ATileManager : public AActor
 {
@@ -25,19 +27,20 @@ public:
 
 private:
 
-	//The size of the room that the players can move around in
+	//The size of the room height (room size = h * w)
 	UPROPERTY(EditAnywhere)
 	int32 RoomHeight = 10;
+	//The size of the room width (room size = h * w)
 	UPROPERTY(EditAnywhere)
 	int32 RoomWidth = 10;
 
 	UPROPERTY(EditAnywhere, Category = "Manager Details")
-	TSubclassOf<class ATile> TileActor;
-
+	TSubclassOf<ATile> TileActor;
+		
 	//Get the TileManagers location
 	FVector CurrentActorLocation;
 
-	TArray<class ATile*> Tiles;
+	TArray<ATile*> Tiles;
 
 	void GetTileSpawnLocation(int32 Height, int32 Width, FVector& ManagerLocation, FVector& OutSpawnLocation);
 

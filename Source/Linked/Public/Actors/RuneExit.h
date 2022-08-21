@@ -35,8 +35,9 @@ public:
 	* Enables the Exit OverlapBox to trigger events
 	*/
 	void KeyCollected();
-
+	
 	bool IsPawnStandingOnExit() const;
+
 private:
 
 	//Root component of the exit
@@ -53,12 +54,16 @@ private:
 
 	//Set the RuneExits location to the tile location
 	UPROPERTY(EditAnywhere)
-	class ATile* TileStartLocation = nullptr;
+	class ATile* StartLocation = nullptr;
 
 	//The game mode
 	ALinkedGameMode* LinkedGameMode = nullptr;
 	bool bKeyCollected = false;
 	bool bIsPawnStandingOnExit = false;
+
+	//Moves the RuneExit Actor to the start location - used in editor as a helper function
+	UFUNCTION(CallInEditor, Category = "Actor Location")
+	void MoveToTileLocation();
 
 	//Test if overlapping actor is a LinkedPlayerPawn
 	bool IsAPlayerPawn(AActor* OtherActor);

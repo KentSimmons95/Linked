@@ -75,7 +75,7 @@ void ATileManager::SpawnTiles()
 			FRotator ActorToSpawnRotation;
 			GetTileSpawnLocation(h, w, TileManagerLocation, ActorToSpawnLocation);
 			ATile* NewTile = GetWorld()->SpawnActor<ATile>(TileActor, ActorToSpawnLocation, ActorToSpawnRotation);
-
+			
 			//Assign the new tile its current X and Y Index
 			NewTile->SetTileCoords(w, h);
 
