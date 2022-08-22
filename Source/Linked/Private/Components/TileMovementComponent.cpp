@@ -271,8 +271,6 @@ ATile* UTileMovementComponent::GetActorStartTile() const
 	}
 }
 
-
-
 void UTileMovementComponent::MoveUp()
 {
 	if (CanMoveUp() && !IsMoving)

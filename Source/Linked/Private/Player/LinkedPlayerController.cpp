@@ -2,14 +2,21 @@
 
 
 #include "Player/LinkedPlayerController.h"
+#include "Kismet/GameplayStatics.h"
+#include "World/LinkedGameMode.h"
 #include "Player/LinkedPlayerPawn.h"
 
 void ALinkedPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
+
 	SetupInput();
 
-	UE_LOG(LogTemp, Warning, TEXT("Hello World"));
+	if (GetLinkedGameMode())
+	{
+		//Set the number of moves remaining based of the current level in the game mode
+		SetNumberOfMovesRemaining(GameMode->GetCurrentLevel());
+	}
 }
 
 void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
@@ -30,6 +37,66 @@ void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s failed to register to PlayerController"), *PlayerPawn->GetActorNameOrLabel());
+	}
+}
+
+int32 ALinkedPlayerController::GetNumberOfMovesRemaining() const
+{
+	return NumberOfMovesRemaining;
+}
+
+void ALinkedPlayerController::SetNumberOfMovesRemaining(ELevels CurrentLevel)
+{
+	switch (CurrentLevel)
+	{
+	case ELevels::Level0:
+		NumberOfMovesRemaining = 0;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	case ELevels::Level1:
+		NumberOfMovesRemaining = 5;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	case ELevels::Level2:
+		NumberOfMovesRemaining = 10;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	case ELevels::Level3:
+		NumberOfMovesRemaining = 10;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	case ELevels::Level4:
+		NumberOfMovesRemaining = 10;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	case ELevels::Level5:
+		NumberOfMovesRemaining = 10;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	case ELevels::Level6:
+		NumberOfMovesRemaining = 10;
+		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
+		break;
+	}
+}
+
+bool ALinkedPlayerController::GetLinkedGameMode()
+{
+	bool bSuccess = false;
+	UGameplayStatics* GameStatics;
+
+	GameMode = Cast<ALinkedGameMode>(GameStatics->GetGameMode(GetWorld()));
+
+	//If the game mode is a ALinkedGameMode return true
+	//Else return false
+	if (GameMode)
+	{
+		bSuccess = true;
+		return bSuccess;
+	}
+	else
+	{
+		return bSuccess;
 	}
 }
 
@@ -341,6 +408,23 @@ void ALinkedPlayerController::RightPawnMoveRight()
 				RightPawn->Turn(EFaceDirection::FaceRight);
 			}
 		}
+	}
+}
+
+void ALinkedPlayerController::SubtractOneFromMovesRemaining()
+{
+	NumberOfMovesRemaining--;
+}
+
+bool ALinkedPlayerController::HaveEnoughPointsToMove()
+{
+	if (NumberOfMovesRemaining > 0)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 

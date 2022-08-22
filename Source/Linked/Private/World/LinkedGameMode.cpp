@@ -3,7 +3,6 @@
 
 #include "World/LinkedGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include "Player/LinkedPlayerController.h"
 #include "Actors/RuneExit.h"
 
 void ALinkedGameMode::BeginPlay()
@@ -55,6 +54,11 @@ void ALinkedGameMode::CheckIfEndOfLevel()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Failed to find registered RuneExitOne OR RuneExitTwo"));
 	}
+}
+
+ELevels ALinkedGameMode::GetCurrentLevel() const
+{
+	return ECurrentLevel;
 }
 
 void ALinkedGameMode::DetermineLevelAsEnum()

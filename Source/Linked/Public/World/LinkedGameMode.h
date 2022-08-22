@@ -8,7 +8,6 @@
 
 class ARuneExit;
 class UGameplayStatics;
-class ALinkedPlayerController;
 
 UENUM()
 enum ELevels
@@ -39,10 +38,12 @@ public:
 	//Function that is called by the registered RuneExit actors to see if the level can be ended
 	void CheckIfEndOfLevel();
 
+	//Returns the current level as an ELevels enum
+	ELevels GetCurrentLevel() const;
+
 private:
 
 	UGameplayStatics* GameStatics;
-	ALinkedPlayerController* PlayerController;
 
 	//Keep track of the two exits in the level
 	ARuneExit* RuneExitOne = nullptr;
