@@ -48,8 +48,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
     /*XValue translates to the Width position in the tileset
 	* YValue translates to the Height position in the tileset
@@ -57,14 +55,16 @@ public:
 	void SetTileCoords(uint32 XValue, int32 YValue);
 
 	bool HasActorOnTile() const;
+
 	//If no actor is on tile - pass in nullptr
 	void UpdateActorOnTile(AActor* Actor);
 	AActor* GetActorOnTile() const;
 
+	//Returns the TileNeighbours for this tile
 	FTileNeighbours GetTileNeighbours() const;
-		 
-	uint32 GetXCoord();
-	uint32 GetYCoord();
+	 
+	uint32 GetXCoord() const;
+	uint32 GetYCoord() const;
 
 private:
 
@@ -83,6 +83,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "On this Tile")
 	bool bHasActorOnTile = false;
 
+	//Called by the tile manager to assign this tiles neighbours in each direction
 	void AddUpNeighbour(ATile* UpNeighbour);
 	void AddDownNeighbour(ATile* DownNeighbour);
 	void AddLeftNeighbour(ATile* LeftNeighbour);

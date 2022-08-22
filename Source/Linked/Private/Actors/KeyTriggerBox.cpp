@@ -16,7 +16,7 @@ AKeyTriggerBox::AKeyTriggerBox()
 
 void AKeyTriggerBox::BeginPlay()
 {
-	//Debug of the trigger box for testing
+	//Debugger helper for the trigger box
 	DrawDebugBox(GetWorld(), GetActorLocation(), FVector(20, 20, 20), FColor(0, 255,0), true);
 }
 
@@ -24,9 +24,6 @@ void AKeyTriggerBox::OnOverlapBegin(AActor* OverlappedActor, AActor* OtherActor)
 {
 	if (OtherActor->IsA(ALinkedPlayerPawn::StaticClass()))
 	{
-		//Update Game mode/level manager to unlock door
-
-		//Set triggered by player to true
 		TriggeredByPlayer = true;
 	}
 

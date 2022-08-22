@@ -25,8 +25,8 @@ void UDirectionComponent::BeginPlay()
 
 void UDirectionComponent::RotateActor(EFaceDirection Direction)
 {
-	//If   - the PawnOwner is still moving then early return
-	//Else - rotate the PawnOwner
+	//If   - the PawnOwner is still moving the return
+	//Else - rotate the Actor Owner
 	if (PawnOwner->IsPawnMoving())
 	{
 		return;
@@ -58,7 +58,7 @@ void UDirectionComponent::RotateActor(EFaceDirection Direction)
 	
 }
 
-EFaceDirection UDirectionComponent::GetCurrentFaceDirection()
+EFaceDirection UDirectionComponent::GetCurrentFaceDirection() const
 {
 	return CurrentFacingDirection;
 }

@@ -21,10 +21,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 private:
 
 	//The size of the room height (room size = h * w)
@@ -34,7 +30,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	int32 RoomWidth = 10;
 
-	UPROPERTY(EditAnywhere, Category = "Manager Details")
+	UPROPERTY(EditAnywhere, Category = "Tile Generator")
 	TSubclassOf<ATile> TileActor;
 		
 	//Get the TileManagers location
@@ -42,10 +38,13 @@ private:
 
 	TArray<ATile*> Tiles;
 
+	//Uses the Height and Width properties to determine the location of the tile
 	void GetTileSpawnLocation(int32 Height, int32 Width, FVector& ManagerLocation, FVector& OutSpawnLocation);
+
 
 	UFUNCTION(CallInEditor)
 	void GenerateTileSet();
+	//If there is an existing tileset spawned in editor - clear them
 	void ResetTiles();
 	void SpawnTiles();
 

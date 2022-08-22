@@ -31,6 +31,7 @@ void ARuneExit::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Hide the RuneExit until its corresponding key is triggered
 	NiagaraComponent->SetVisibility(false);
 
 	UGameplayStatics* GameplayStatics;

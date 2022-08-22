@@ -7,8 +7,7 @@
 // Sets default values
 ATileManager::ATileManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+
 }
 
 // Called when the game starts or when spawned
@@ -18,12 +17,6 @@ void ATileManager::BeginPlay()
 	
 }
 
-// Called every frame
-void ATileManager::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 void ATileManager::GetTileSpawnLocation(int32 Height, int32 Width, FVector& ManagerLocation, FVector& OutSpawnLocation)
 {
@@ -46,14 +39,11 @@ void ATileManager::GenerateTileSet()
 	//A tile is considered a neighbough if it is: Directly Above/Below/Left/Right of the current tile
 	DetermineTileNeighbours();
 
-	
-
 	UE_LOG(LogTemp, Warning, TEXT("Generated Tile Success"));
 }
 
 void ATileManager::ResetTiles()
 {
-	//If there is an existing tileset spawned - clear them
 	for (auto Tile : Tiles)
 	{
 		Tile->Destroy();
@@ -66,7 +56,7 @@ void ATileManager::SpawnTiles()
 	//Used to pass into GetTileSpawnLocation()
 	FVector TileManagerLocation = GetActorLocation();
 
-	//Spawn the set of our tile actors
+	//Spawn the set of tile actors
 	for (int h = 0; h < RoomHeight; ++h)
 	{
 		for (int w = 0; w < RoomWidth; ++w)
@@ -108,10 +98,10 @@ void ATileManager::DetermineTileNeighbours()
 		TileXCoord = Tile->GetXCoord();
 		TileYCoord = Tile->GetYCoord();
 		
-		GetUpNeighbour(Tile, TileYCoord, CurrentArrayIndex);
-		GetDownNeighbour(Tile, TileYCoord, CurrentArrayIndex);
+		GetUpNeighbour(   Tile, TileYCoord, CurrentArrayIndex);
+		GetDownNeighbour( Tile, TileYCoord, CurrentArrayIndex);
 		GetRightNeighbour(Tile, TileXCoord, CurrentArrayIndex);
-		GetLeftNeighbour(Tile, TileXCoord, CurrentArrayIndex);
+		GetLeftNeighbour( Tile, TileXCoord, CurrentArrayIndex);
 
 		++CurrentArrayIndex;
 	}

@@ -8,6 +8,7 @@
 
 class ARuneExit;
 class UGameplayStatics;
+class ALinkedPlayerController;
 
 UENUM()
 enum ELevels
@@ -32,6 +33,7 @@ public:
 
 	virtual void BeginPlay() override;
 
+	//Allows a Rune Exit to register themself if they have the correct Actor Tag
 	bool RegisterRuneExit(ARuneExit* RuneExit);
 
 	//Function that is called by the registered RuneExit actors to see if the level can be ended
@@ -40,6 +42,7 @@ public:
 private:
 
 	UGameplayStatics* GameStatics;
+	ALinkedPlayerController* PlayerController;
 
 	//Keep track of the two exits in the level
 	ARuneExit* RuneExitOne = nullptr;

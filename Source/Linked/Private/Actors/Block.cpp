@@ -15,15 +15,21 @@ void ABlock::BeginPlay()
 {
 	Super::BeginPlay();
 
-	checkf(TileMovementComponent, TEXT("Failed to find TileMovementComponent on Actor - %s!"), *this->GetActorNameOrLabel());
+	if (!TileMovementComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Failed to find TileMovementComponent on Actor - %s!"), *this->GetActorNameOrLabel());
+	}
+
+	//Old Assert
+	//checkf(TileMovementComponent, TEXT("Failed to find TileMovementComponent on Actor - %s!"), *this->GetActorNameOrLabel());
 }
 
-bool ABlock::CanMoveInDirection(EMoveDirection Direction)
+bool ABlock::CanMoveInDirection(EMoveDirection Direction) const
 {
 	return TileMovementComponent->CanMoveInDirection(Direction);
 }
 
-void ABlock::MoveInDirection(EMoveDirection Direction)
+void ABlock::MoveInDirection(EMoveDirection Direction) const
 {
 	TileMovementComponent->MoveToTile(Direction);
 }

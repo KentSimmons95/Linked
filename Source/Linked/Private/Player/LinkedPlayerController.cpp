@@ -8,6 +8,7 @@ void ALinkedPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	SetupInput();
+
 	UE_LOG(LogTemp, Warning, TEXT("Hello World"));
 }
 
@@ -129,7 +130,7 @@ void ALinkedPlayerController::LeftPawnMoveLeft()
 	else
 	{
 		//If we are currently linked then boths pawns will move left (if they can)
-		if (LeftPawn->LinkedStatus())
+		if (LeftPawn->GetLinkedStatus())
 		{
 			if (IsFacingSameDirection(EFaceDirection::FaceLeft))
 			{
@@ -168,7 +169,7 @@ void ALinkedPlayerController::LeftPawnMoveRight()
 	else
 	{
 		//If we are currently linked then boths pawns will move left (if they can)
-		if (LeftPawn->LinkedStatus())
+		if (LeftPawn->GetLinkedStatus())
 		{
 			if (IsFacingSameDirection(EFaceDirection::FaceRight))
 			{
@@ -274,7 +275,7 @@ void ALinkedPlayerController::RightPawnMoveLeft()
 	else
 	{
 		//If we are currently linked then boths pawns will move left (if they can)
-		if (RightPawn->LinkedStatus())
+		if (RightPawn->GetLinkedStatus())
 		{
 			if (IsFacingSameDirection(EFaceDirection::FaceLeft))
 			{
@@ -314,7 +315,7 @@ void ALinkedPlayerController::RightPawnMoveRight()
 	else
 	{
 		//If we are currently linked then boths pawns will move left (if they can)
-		if (RightPawn->LinkedStatus())
+		if (RightPawn->GetLinkedStatus())
 		{
 			if (IsFacingSameDirection(EFaceDirection::FaceRight))
 			{
@@ -348,7 +349,7 @@ void ALinkedPlayerController::PawnPush()
 	/*Test if there is a block in front of the left pawn
 	 *If there is then push the block 1 tile away from the left pawn
 	 */
-	if (LeftPawn->LinkedStatus())
+	if (LeftPawn->GetLinkedStatus())
 	{
 		LeftPawn->PushBlock();
 	}
@@ -366,7 +367,7 @@ void ALinkedPlayerController::PawnPull()
 	*/
 	UE_LOG(LogTemp, Warning, TEXT("Trying to pull!"));
 
-	if (RightPawn->LinkedStatus())
+	if (RightPawn->GetLinkedStatus())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("We are linked!"));
 		RightPawn->PullBlock();

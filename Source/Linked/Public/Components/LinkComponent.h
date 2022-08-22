@@ -21,28 +21,29 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	//Creates a link with an Actor
-	//void CreateLinkWithActor(AActor* ActorToLink);
 	void CreateLinkWithActor();
 
-	AActor* GetCurrentLinkedActor();
+	AActor* GetCurrentLinkedActor() const;
 
 	//Returns the current linked status to this Actor
-	bool IsCurrentlyLinked();
+	bool IsCurrentlyLinked() const;
+
+	//Checks if there are no obstructions between the owning actor and its target Actor
 	bool HasLineOfSight();
 
 private:
-
+	//This components owning actor
 	AActor* ActorOwner = nullptr;
+
 	//The actor that is linked to this actor
 	UPROPERTY(EditAnywhere, Category = "Target")
 	AActor* LinkedActor = nullptr;
 	
 	AActor* HitActor = nullptr;
 
+	//Flag to show if the link is active or not
 	UPROPERTY(VisibleAnywhere, Category = "Link Status")
 	bool bIsCurrentlyLinked = false;
 

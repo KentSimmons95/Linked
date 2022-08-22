@@ -22,7 +22,7 @@ class LINKED_API ALinkedPlayerController : public APlayerController
 public:
 	virtual void BeginPlay() override;
 
-	//Allows the PlayerPawns to register themselves to the Controller based on their Tag
+	//Allows the PlayerPawns to register themselves to the Controller based on their Actor Tag
 	void RegisterPlayerPawns(class ALinkedPlayerPawn* PlayerPawn);
 
 private:
@@ -32,12 +32,10 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "PlayerPawns")
 	ALinkedPlayerPawn* RightPawn;
 	
-	//TODO - Remove?
-	bool CanPawnsSeeEachOther = true;
-
 	bool LeftPawnRegistered = false;
 	bool RightPawnRegistered = false;
 
+	//Enable Input and setup Action Bindings for each Pawn
 	void SetupInput();
 
 	void LeftPawnMoveUp();

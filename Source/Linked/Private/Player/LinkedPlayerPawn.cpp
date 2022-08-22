@@ -94,7 +94,7 @@ void ALinkedPlayerPawn::PullBlock()
 	InteractComponent->TryPullBlock();
 }
 
-bool ALinkedPlayerPawn::LinkedStatus()
+bool ALinkedPlayerPawn::GetLinkedStatus() const
 {
 	return LinkComponent->IsCurrentlyLinked();
 }

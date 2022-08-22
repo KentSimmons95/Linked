@@ -54,7 +54,7 @@ public:
 	void PullBlock();
 
 	//The current link status of the Pawn
-	bool LinkedStatus();
+	bool GetLinkedStatus() const;
 
 	//Wrapper to allow access to the Pawns TileMovementComponent move directions
 	bool CanMoveUp()    const;

@@ -24,8 +24,11 @@ protected:
 
 public:	
 
-	bool CanMoveInDirection(EMoveDirection Direction);
-	void MoveInDirection(EMoveDirection Direction);
+	//Checks if the Block can move in the given EMoveDirection
+	bool CanMoveInDirection(EMoveDirection Direction) const;
+
+	//Moves the Block in the specified EMoveDirection
+	void MoveInDirection(EMoveDirection Direction) const;
 
 private:
 
@@ -35,7 +38,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	UTileMovementComponent* TileMovementComponent;
 
-	//Moves the Block Actor to the start location 
+	//In editor helper function to position the Block actor 
 	UFUNCTION(CallInEditor, Category = "Actor Location")
 	void MoveToTileLocation();
 };

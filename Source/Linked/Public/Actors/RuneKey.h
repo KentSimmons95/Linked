@@ -20,10 +20,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
 private:
 
 	UPROPERTY(EditAnywhere)
@@ -41,7 +37,7 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Key Settings")
 	class ATile* StartLocation = nullptr;
 
-	//Moves the RuneKey Actor to the start location 
+	//In Editor function that moves the RuneKey Actor to the start tile location  
 	UFUNCTION(CallInEditor, Category = "Key Settings")
 	void MoveToTileLocation();
 

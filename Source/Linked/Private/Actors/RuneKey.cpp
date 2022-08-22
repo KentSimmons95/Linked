@@ -30,6 +30,7 @@ void ARuneKey::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//If the RuneKey isn't moved to the tile in the editor - then move it to its correct location when game starts
 	if (!StartLocation)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("StartLocation missing for RuneKey Actor: %s"), *this->GetActorNameOrLabel());
@@ -43,13 +44,6 @@ void ARuneKey::BeginPlay()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No RuneExit is associated with: %s"), *this->GetActorNameOrLabel());
 	}
-}
-
-// Called every frame
-void ARuneKey::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void ARuneKey::MoveToTileLocation()

@@ -3,6 +3,7 @@
 
 #include "World/LinkedGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Player/LinkedPlayerController.h"
 #include "Actors/RuneExit.h"
 
 void ALinkedGameMode::BeginPlay()

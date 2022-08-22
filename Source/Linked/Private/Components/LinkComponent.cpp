@@ -6,11 +6,7 @@
 // Sets default values for this component's properties
 ULinkComponent::ULinkComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -31,14 +27,6 @@ void ULinkComponent::BeginPlay()
 	}
 }
 
-
-// Called every frame
-void ULinkComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-}
-
 //If the Pawns have direct line of sight of each other then they are considered linked
 bool ULinkComponent::HasLineOfSight()
 {
@@ -49,18 +37,25 @@ bool ULinkComponent::HasLineOfSight()
 		UE_LOG(LogTemp, Warning, TEXT("Missing LinkedActor for %s LinkComponent!"), *ActorOwner->GetActorNameOrLabel());
 		return false;
 	}
+
 	bool bHit = false;
 
+	//Get Owning actors transform as the origin for the line trace
 	FVector CurrentLocation = ActorOwner->GetActorLocation();
 	FRotator CurrentRotation = ActorOwner->GetActorRotation();
+
+	//Store the FHitResult
 	FHitResult Hit;
 
 	FVector Start = CurrentLocation;
 	FVector End = LinkedActor->GetActorLocation();
 
 	FCollisionQueryParams TraceParams;
+
+	//Ignore self in the FCollisionQueryParams
 	TraceParams.AddIgnoredActor(ActorOwner);
 
+	//Fire the line trace and set channel to Pawns
 	GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECollisionChannel::ECC_Pawn, TraceParams);
 
 	HitActor = Hit.GetActor();
@@ -71,12 +66,10 @@ bool ULinkComponent::HasLineOfSight()
 	{
 		DrawDebugBox(GetWorld(), Hit.ImpactPoint, FVector(20, 20, 20), FColor::Blue, false, 2.0f);
 		bIsCurrentlyLinked = true;
-		//UE_LOG(LogTemp, Warning, TEXT("Line of sight with: %s!"), *LinkedActor->GetActorNameOrLabel());
 		bHit = true;
 	}
 	else
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("No line of sight with Actor: %s!"), *LinkedActor->GetActorNameOrLabel());
 		bIsCurrentlyLinked = false;
 		bHit = false;
 	}
@@ -98,12 +91,12 @@ void ULinkComponent::CreateLinkWithActor()
 	}
 }
 
-AActor* ULinkComponent::GetCurrentLinkedActor()
+AActor* ULinkComponent::GetCurrentLinkedActor() const
 {
 	return LinkedActor;
 }
 
-bool ULinkComponent::IsCurrentlyLinked()
+bool ULinkComponent::IsCurrentlyLinked() const
 {
 	return bIsCurrentlyLinked;
 }

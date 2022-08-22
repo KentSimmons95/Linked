@@ -6,7 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "DirectionComponent.generated.h"
 
-//Enum to rotate the actor in the desired direction
+class ALinkedPlayerPawn;
+
+//Enum used to rotate the actor in the desired direction
 UENUM()
 enum EFaceDirection
 {
@@ -16,10 +18,10 @@ enum EFaceDirection
 	FaceRight	 UMETA(DisplayName = "Right")
 };
 
-/*** Direction Component  
- *** Attaches to an actor to help determine which 
- *** direction they are facing when calculating movement on the tiles		
- ***/
+/* Direction Component  
+   Attaches to a Pawn to help determine which 
+   direction they are facing when calculating movement on the tiles		
+ */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class LINKED_API UDirectionComponent : public UActorComponent
 {
@@ -35,21 +37,25 @@ protected:
 
 public:	
 
+	//Rotates the actor in the given EFaceDirection
 	void RotateActor(EFaceDirection Direction);
-	EFaceDirection GetCurrentFaceDirection();
+
+	//Returns the CurrentFacingDirection
+	EFaceDirection GetCurrentFaceDirection() const;
 
 private:
 
-	class ALinkedPlayerPawn* PawnOwner = nullptr;
+	//This components PawnOwner
+	ALinkedPlayerPawn* PawnOwner = nullptr;
 
-	//Set the default direction to FaceUp
+	//Set the default direction to be FaceUp
 	EFaceDirection CurrentFacingDirection = EFaceDirection::FaceUp;
 	FRotator TurnUp    = { 0.0f, 0.0f   , 0.0f};
 	FRotator TurnDown  = { 0.0f, 180.0f , 0.0f};
 	FRotator TurnLeft  = { 0.0f, 270.0f , 0.0f};
 	FRotator TurnRight = { 0.0f, 90.0f  , 0.0f};
 
-	/**** Rotation - Called by RotateActor to TURN the parent actor in the desired direction ****/
+	// Rotation fucntions - Called by RotateActor to TURN the parent actor in the desired direction
 	void FaceUp();
 	void FaceDown();
 	void FaceLeft();
