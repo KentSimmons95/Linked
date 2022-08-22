@@ -106,9 +106,10 @@ void ARuneExit::OnPlayerEnterOverlapBox(UPrimitiveComponent* OverlappedActor, AA
 {
 	UE_LOG(LogTemp, Warning, TEXT("Overlapped with: %s"), *this->GetActorNameOrLabel());
 
-	//Test if OtherActor is a PlayerPawn
-	//Tell game mode that a player is standing on exit 
-	//Test if both Pawns are on the exit
+	/*Test if OtherActor is a PlayerPawn
+	Tell game mode that a player is standing on exit 
+	Test if both Pawns are on the exit
+	*/
 	if (IsAPlayerPawn(OtherActor))
 	{
 		bIsPawnStandingOnExit = true;
