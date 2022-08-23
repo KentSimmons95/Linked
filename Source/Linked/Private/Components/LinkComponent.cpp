@@ -60,11 +60,13 @@ bool ULinkComponent::HasLineOfSight()
 
 	HitActor = Hit.GetActor();
 
-	DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
+	//ForDebug purposes
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 2.0f);
 
 	if (HitActor == LinkedActor)
 	{
-		DrawDebugBox(GetWorld(), Hit.ImpactPoint, FVector(20, 20, 20), FColor::Blue, false, 2.0f);
+		//ForDebug purposes
+		//DrawDebugBox(GetWorld(), Hit.ImpactPoint, FVector(20, 20, 20), FColor::Blue, false, 2.0f);
 		bIsCurrentlyLinked = true;
 		bHit = true;
 	}

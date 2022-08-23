@@ -1,6 +1,6 @@
 # Linked
 
-Developed with Unreal Engine 5
+A spatial reasoning puzzle game developed with Unreal Engine 5
 
 ---
 
@@ -72,10 +72,11 @@ they cannot do this.
 ---
 
 ## References
-[Back To The Top](#linked)
 
 [Unreal Documentation](https://www.unrealengine.com/en-US/bing-search?x=0&y=0&filter=Documentation)
 [Youtube Gameplay](https://www.youtube.com/channel/UCG5LdnJxAcCPUxRxXu5J4PQ/featured)
+
+[Back To The Top](#linked)
 
 ---
 
