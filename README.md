@@ -64,11 +64,12 @@ they cannot do this.
 
 ---
 
-#### Features to add
+## Features to add
 
 - Destructible actors 
 - Object switches
 - Move counter/limter
+- Game UI for Link status
 
 [Back To The Top](#read-me-template)
 
