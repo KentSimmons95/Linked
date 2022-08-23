@@ -73,8 +73,8 @@ they cannot do this.
 
 ## References
 
-[Unreal Documentation](https://www.unrealengine.com/en-US/bing-search?x=0&y=0&filter=Documentation)
-[Youtube Gameplay](https://www.youtube.com/channel/UCG5LdnJxAcCPUxRxXu5J4PQ/featured)
+- [Unreal Documentation](https://www.unrealengine.com/en-US/bing-search?x=0&y=0&filter=Documentation)
+- [Youtube Gameplay](https://youtu.be/6gdVvI1RbYQ)
 
 [Back To The Top](#linked)
 
