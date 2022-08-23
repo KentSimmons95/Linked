@@ -11,12 +11,6 @@ void ALinkedPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	SetupInput();
-
-	if (GetLinkedGameMode())
-	{
-		//Set the number of moves remaining based of the current level in the game mode
-		SetNumberOfMovesRemaining(GameMode->GetCurrentLevel());
-	}
 }
 
 void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
@@ -43,61 +37,6 @@ void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
 int32 ALinkedPlayerController::GetNumberOfMovesRemaining() const
 {
 	return NumberOfMovesRemaining;
-}
-
-void ALinkedPlayerController::SetNumberOfMovesRemaining(ELevels CurrentLevel)
-{
-	switch (CurrentLevel)
-	{
-	case ELevels::Level0:
-		NumberOfMovesRemaining = 0;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	case ELevels::Level1:
-		NumberOfMovesRemaining = 5;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	case ELevels::Level2:
-		NumberOfMovesRemaining = 10;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	case ELevels::Level3:
-		NumberOfMovesRemaining = 10;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	case ELevels::Level4:
-		NumberOfMovesRemaining = 10;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	case ELevels::Level5:
-		NumberOfMovesRemaining = 10;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	case ELevels::Level6:
-		NumberOfMovesRemaining = 10;
-		UE_LOG(LogTemp, Warning, TEXT("Number of moves set for current level: %i"), NumberOfMovesRemaining);
-		break;
-	}
-}
-
-bool ALinkedPlayerController::GetLinkedGameMode()
-{
-	bool bSuccess = false;
-	UGameplayStatics* GameStatics;
-
-	GameMode = Cast<ALinkedGameMode>(GameStatics->GetGameMode(GetWorld()));
-
-	//If the game mode is a ALinkedGameMode return true
-	//Else return false
-	if (GameMode)
-	{
-		bSuccess = true;
-		return bSuccess;
-	}
-	else
-	{
-		return bSuccess;
-	}
 }
 
 void ALinkedPlayerController::SetupInput()
@@ -136,7 +75,7 @@ void ALinkedPlayerController::LeftPawnMoveUp()
 		//Else rotate the pawns to face up before moving
 		if(LeftPawn->IsFacingDirection(EFaceDirection::FaceUp) && RightPawn->IsFacingDirection(EFaceDirection::FaceUp))
 		{
-			//Then check that both pawns can move up before moving
+			//Then check that both pawns can move up before moving and that there are available move points
 			if (LeftPawn->CanMoveUp() && RightPawn->CanMoveUp())
 			{
 				LeftPawn->Move(EMoveDirection::Up);
@@ -408,23 +347,6 @@ void ALinkedPlayerController::RightPawnMoveRight()
 				RightPawn->Turn(EFaceDirection::FaceRight);
 			}
 		}
-	}
-}
-
-void ALinkedPlayerController::SubtractOneFromMovesRemaining()
-{
-	NumberOfMovesRemaining--;
-}
-
-bool ALinkedPlayerController::HaveEnoughPointsToMove()
-{
-	if (NumberOfMovesRemaining > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
 	}
 }
 

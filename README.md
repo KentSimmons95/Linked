@@ -12,10 +12,9 @@ Developed with Unreal Engine 5
 ---
 
 ### Table of Contents
-You're sections headers will be used to reference location of destination.
 
 - [Description](#description)
-- [How To Use](#how-to-use)
+- [How To Play](#how-to-play)
 - [References](#references)
 - [License](#license)
 - [Author Info](#author-info)
@@ -24,28 +23,53 @@ You're sections headers will be used to reference location of destination.
 
 ## Description
 
-Creating ReadMe's for your Github repository can be tedious.  I hope this template can save you time and effort as well as provide you with some consistency across your projects.
+Linked is a game created for the purpose of a portfolio project. The game is not final and can still change with new features being added.
 
 #### Technologies
 
-- Technology 1
-- Technology 2
+- Unreal Engine 5
+- C++ 
+- Blueprinting
+- Git
 
 [Back To The Top](#read-me-template)
 
 ---
 
-## How To Use
+## How To Play
 
-#### Installation
+### Controls
 
+#### Left Pawn
 
+- W Key to move BOTH Pawns up
+- A Key to move left
+- S Key to move BOTH Pawns down
+- D Key to move right
+- Q Push a block away from Pawn (If linked)
 
-#### API Reference
+#### Right Pawn
 
-```html
-    <p>dummy code</p>
-```
+- Left Arrow Key to move left
+- Right Arrow Key to move right
+- E Pull a block towards the Pawn (If linked)
+
+#### Link Mechanic
+
+The link mechanic is the primary game mechanic in the game. It controls what the Player Pawns can and cannot do.
+If the Pawns are linked they are able to move blocks around by either pushing or pulling them. If they are not linked together
+they cannot do this.
+
+[Back To The Top](#read-me-template)
+
+---
+
+#### Features to add
+
+- Destructible actors 
+- Object switches
+- Move counter/limter
+
 [Back To The Top](#read-me-template)
 
 ---
@@ -53,13 +77,16 @@ Creating ReadMe's for your Github repository can be tedious.  I hope this templa
 ## References
 [Back To The Top](#read-me-template)
 
+[Unreal Documentation](https://www.unrealengine.com/en-US/bing-search?x=0&y=0&filter=Documentation)
+[Youtube Gameplay](https://www.youtube.com/channel/UCG5LdnJxAcCPUxRxXu5J4PQ/featured)
+
 ---
 
 ## License
 
 MIT License
 
-Copyright (c) [2017] [James Q Quick]
+Copyright (c) [2022] [Kent H Simmons]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -85,7 +112,6 @@ SOFTWARE.
 
 ## Author Info
 
-- Twitter - [@jamesqquick](https://twitter.com/jamesqquick)
-- Website - [James Q Quick](https://jamesqquick.com)
+- LinkedIn - [Kent Simmons](https://www.linkedin.com/in/kent-simmons-157b501b6/)
 
 [Back To The Top](#read-me-template)

@@ -26,29 +26,18 @@ public:
 	//Allows the PlayerPawns to register themselves to the Controller based on their Actor Tag
 	void RegisterPlayerPawns(class ALinkedPlayerPawn* PlayerPawn);
 
-	//Returns how many moves the player controller can make in the level
-	UFUNCTION(BlueprintCallable)
-	int32 GetNumberOfMovesRemaining() const;
-
-	//Sets how many moves the player controller can make in the level
-	void SetNumberOfMovesRemaining(ELevels CurrentLevel);
-
 private:
 
 	UPROPERTY(VisibleAnywhere, Category = "PlayerPawns")
 	ALinkedPlayerPawn* LeftPawn;
 	UPROPERTY(VisibleAnywhere, Category = "PlayerPawns")
 	ALinkedPlayerPawn* RightPawn;
-	
-	ALinkedGameMode* GameMode = nullptr;
-	
+		
 	bool LeftPawnRegistered = false;
 	bool RightPawnRegistered = false;
 
 	//The number of moves that the pawn is allowed to make in the level
 	int32 NumberOfMovesRemaining = 0;
-
-	bool GetLinkedGameMode();
 
 	//Enable Input and setup Action Bindings for each Pawn
 	void SetupInput();
@@ -62,10 +51,6 @@ private:
 	void RightPawnMoveDown();
 	void RightPawnMoveLeft();
 	void RightPawnMoveRight();
-
-	void SubtractOneFromMovesRemaining();
-	//Checks if there is 1 or more remaining moves avaible
-	bool HaveEnoughPointsToMove();
 
 	//Default set to LeftPawn Push
 	void PawnPush();
