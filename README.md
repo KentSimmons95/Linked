@@ -2,13 +2,6 @@
 
 Developed with Unreal Engine 5
 
-
-# Read Me Template
-
-![Project Image](project-image-url)
-
-> This is a ReadMe template to help save you time and effort.
-
 ---
 
 ### Table of Contents
@@ -31,7 +24,7 @@ Linked is a game created for the purpose of a portfolio project. The game is not
 - Blueprinting
 - Git
 
-[Back To The Top](#read-me-template)
+[Back To The Top](#linked)
 
 ---
 
@@ -63,7 +56,7 @@ The link mechanic is the primary game mechanic in the game. It controls what the
 If the Pawns are linked they are able to move blocks around by either pushing or pulling them. If they are not linked together
 they cannot do this.
 
-[Back To The Top](#read-me-template)
+[Back To The Top](#linked)
 
 ---
 
@@ -79,7 +72,7 @@ they cannot do this.
 ---
 
 ## References
-[Back To The Top](#read-me-template)
+[Back To The Top](#linked)
 
 [Unreal Documentation](https://www.unrealengine.com/en-US/bing-search?x=0&y=0&filter=Documentation)
 [Youtube Gameplay](https://www.youtube.com/channel/UCG5LdnJxAcCPUxRxXu5J4PQ/featured)
@@ -90,4 +83,4 @@ they cannot do this.
 
 - LinkedIn - [Kent Simmons](https://www.linkedin.com/in/kent-simmons-157b501b6/)
 
-[Back To The Top](#read-me-template)
+[Back To The Top](#linked)
