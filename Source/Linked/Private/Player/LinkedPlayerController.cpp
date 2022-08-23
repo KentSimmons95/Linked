@@ -34,11 +34,6 @@ void ALinkedPlayerController::RegisterPlayerPawns(ALinkedPlayerPawn* PlayerPawn)
 	}
 }
 
-int32 ALinkedPlayerController::GetNumberOfMovesRemaining() const
-{
-	return NumberOfMovesRemaining;
-}
-
 void ALinkedPlayerController::SetupInput()
 {
 	EnableInput(this);
